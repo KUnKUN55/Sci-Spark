@@ -1,0 +1,357 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   🎞️ ANIMATIONS.CSS — World-Class Motion System
+   ═══════════════════════════════════════════════════════════════════════
+   Cinematic Apple-level motions. CSS-only. GPU-safe.
+   All animations use opacity + transform ONLY.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════
+   PAGE ENTRANCE CINEMATIC
+   ═══════════════════════════════════════ */
+@keyframes up-page-enter {
+  0%   { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+  60%  { opacity: 0.85; filter: blur(0); }
+  100% { opacity: 1;  transform: translateY(0); }
+}
+
+@keyframes up-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes up-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes up-scale-in {
+  from { opacity: 0; transform: scale(0.88); filter: blur(4px); }
+  to   { opacity: 1; transform: scale(1);    filter: blur(0); }
+}
+
+@keyframes up-slide-left {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes up-slide-right {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes up-spring-in {
+  0%   { opacity: 0; transform: scale(0.82) translateY(12px); }
+  60%  { opacity: 1; transform: scale(1.03) translateY(-3px); }
+  80%  { transform: scale(0.99) translateY(1px); }
+  100% { transform: scale(1)    translateY(0); }
+}
+
+
+/* ═══════════════════════════════════════
+   MAIN / CONTENT AREAS
+   ═══════════════════════════════════════ */
+.main {
+  animation: up-page-enter 0.55s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.content {
+  animation: up-page-enter 0.50s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.sidebar {
+  animation: up-slide-right 0.45s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.header {
+  animation: up-fade-up 0.40s cubic-bezier(0.22,1,0.36,1) 0.05s both !important;
+}
+
+.filter-section {
+  animation: up-fade-up 0.45s cubic-bezier(0.22,1,0.36,1) 0.10s both !important;
+}
+
+
+/* ═══════════════════════════════════════
+   CARD STAGGER MATERIALIZE
+   (up to 12 children revealed with offset)
+   ═══════════════════════════════════════ */
+.grid > * {
+  animation: up-fade-up 0.50s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+  animation-fill-mode: both !important;
+}
+
+/* Stagger delays 1-12 */
+.grid > *:nth-child(1)  { animation-delay: 0.06s !important; }
+.grid > *:nth-child(2)  { animation-delay: 0.12s !important; }
+.grid > *:nth-child(3)  { animation-delay: 0.18s !important; }
+.grid > *:nth-child(4)  { animation-delay: 0.24s !important; }
+.grid > *:nth-child(5)  { animation-delay: 0.30s !important; }
+.grid > *:nth-child(6)  { animation-delay: 0.36s !important; }
+.grid > *:nth-child(7)  { animation-delay: 0.40s !important; }
+.grid > *:nth-child(8)  { animation-delay: 0.44s !important; }
+.grid > *:nth-child(9)  { animation-delay: 0.47s !important; }
+.grid > *:nth-child(10) { animation-delay: 0.50s !important; }
+.grid > *:nth-child(11) { animation-delay: 0.52s !important; }
+.grid > *:nth-child(12) { animation-delay: 0.54s !important; }
+
+
+/* ═══════════════════════════════════════
+   ADMIN CARDS STAGGER
+   ═══════════════════════════════════════ */
+.admin-card {
+  animation: up-fade-up 0.50s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+}
+
+.admin-card:nth-child(1) { animation-delay: 0.08s !important; }
+.admin-card:nth-child(2) { animation-delay: 0.16s !important; }
+.admin-card:nth-child(3) { animation-delay: 0.22s !important; }
+.admin-card:nth-child(4) { animation-delay: 0.28s !important; }
+.admin-card:nth-child(n+5) { animation-delay: 0.32s !important; }
+
+
+/* ═══════════════════════════════════════
+   NAV ITEMS STAGGER
+   ═══════════════════════════════════════ */
+.nav-item {
+  animation: up-slide-right 0.40s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+}
+.nav-item:nth-child(1) { animation-delay: 0.06s !important; }
+.nav-item:nth-child(2) { animation-delay: 0.10s !important; }
+.nav-item:nth-child(3) { animation-delay: 0.14s !important; }
+.nav-item:nth-child(4) { animation-delay: 0.18s !important; }
+.nav-item:nth-child(5) { animation-delay: 0.22s !important; }
+.nav-item:nth-child(6) { animation-delay: 0.26s !important; }
+.nav-item:nth-child(n+7) { animation-delay: 0.28s !important; }
+
+
+/* ═══════════════════════════════════════
+   TABS CHOREOGRAPHY
+   ═══════════════════════════════════════ */
+.cat-tab, .type-tab {
+  animation: up-scale-in 0.35s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+}
+
+.cat-tab:nth-child(1), .type-tab:nth-child(1) { animation-delay: 0.12s !important; }
+.cat-tab:nth-child(2), .type-tab:nth-child(2) { animation-delay: 0.16s !important; }
+.cat-tab:nth-child(3), .type-tab:nth-child(3) { animation-delay: 0.20s !important; }
+.cat-tab:nth-child(4), .type-tab:nth-child(4) { animation-delay: 0.24s !important; }
+.cat-tab:nth-child(5), .type-tab:nth-child(5) { animation-delay: 0.28s !important; }
+.cat-tab:nth-child(6), .type-tab:nth-child(6) { animation-delay: 0.32s !important; }
+.cat-tab:nth-child(7), .type-tab:nth-child(7) { animation-delay: 0.36s !important; }
+.cat-tab:nth-child(n+8) { animation-delay: 0.38s !important; }
+
+
+/* ═══════════════════════════════════════
+   SCORE / STAT CARDS STAGGER
+   ═══════════════════════════════════════ */
+.score-card, .stat-card, .result-card {
+  animation: up-spring-in 0.55s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+}
+
+.score-card:nth-child(1), .stat-card:nth-child(1) { animation-delay: 0.08s !important; }
+.score-card:nth-child(2), .stat-card:nth-child(2) { animation-delay: 0.16s !important; }
+.score-card:nth-child(3), .stat-card:nth-child(3) { animation-delay: 0.24s !important; }
+.score-card:nth-child(n+4) { animation-delay: 0.30s !important; }
+
+
+/* ═══════════════════════════════════════
+   MODAL SPRING ENTRANCE
+   ═══════════════════════════════════════ */
+@keyframes up-modal-in {
+  0%   { opacity: 0; transform: scale(0.84) translateY(20px); filter: blur(8px); }
+  60%  { transform: scale(1.025) translateY(-4px); filter: blur(0); }
+  80%  { transform: scale(0.995) translateY(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal, .modal-content, .login-box {
+  animation: up-modal-in 0.55s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+@keyframes up-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-backdrop, .login-overlay {
+  animation: up-overlay-in 0.30s ease both !important;
+}
+
+
+/* ═══════════════════════════════════════
+   TOAST NOTIFICATION
+   ═══════════════════════════════════════ */
+@keyframes up-toast-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.92); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0); }
+}
+
+@keyframes up-toast-out {
+  from { opacity: 1; transform: translateY(0)  scale(1); }
+  to   { opacity: 0; transform: translateY(8px) scale(0.95); }
+}
+
+.toast {
+  animation: up-toast-in 0.40s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.toast.hiding {
+  animation: up-toast-out 0.25s cubic-bezier(0.4,0,1,1) forwards !important;
+}
+
+
+/* ═══════════════════════════════════════
+   MICRO-INTERACTIONS
+   ═══════════════════════════════════════ */
+/* Any interactive surface */
+button, [onclick], .card, .nav-item,
+.cat-tab, .type-tab, .choice-btn {
+  -webkit-tap-highlight-color: transparent !important;
+  tap-action: manipulation !important;
+}
+
+/* Focus ring — global */
+:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.40) !important;
+  border-radius: 8px !important;
+}
+
+/* Active haptic feedback on all clickables */
+.card:active,
+.choice-btn:active,
+.cat-tab:active,
+.type-tab:active {
+  transform: scale(0.95) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Button hover lift */
+button:hover {
+  transform: translateY(-1px) !important;
+  transition-duration: 0.22s !important;
+}
+
+button:active {
+  transform: scale(0.96) translateY(0) !important;
+  transition-duration: 0.07s !important;
+}
+
+
+/* ═══════════════════════════════════════
+   PULSE GLOW — key elements
+   ═══════════════════════════════════════ */
+@keyframes up-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10,132,255,0); }
+  50%       { box-shadow: 0 0 24px 4px rgba(10,132,255,0.15); }
+}
+
+.nav-item.active {
+  animation: up-glow-pulse 3.5s ease-in-out infinite !important;
+}
+
+/* search bar quiet pulse when empty */
+.search-bar:not(:focus-within) {
+  animation: up-search-ambient 8s ease-in-out infinite !important;
+}
+
+@keyframes up-search-ambient {
+  0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8); }
+  50%       { box-shadow: 0 2px 12px rgba(10,132,255,0.08), 0 0 24px rgba(10,132,255,0.04), inset 0 1px 0 rgba(255,255,255,0.85); }
+}
+
+
+/* ═══════════════════════════════════════
+   EXAM CHOICES REVEAL
+   ═══════════════════════════════════════ */
+.choice-btn {
+  animation: up-fade-up 0.35s cubic-bezier(0.22,1,0.36,1) both !important;
+  opacity: 0 !important;
+}
+
+.choice-btn:nth-child(1) { animation-delay: 0.05s !important; }
+.choice-btn:nth-child(2) { animation-delay: 0.10s !important; }
+.choice-btn:nth-child(3) { animation-delay: 0.14s !important; }
+.choice-btn:nth-child(4) { animation-delay: 0.18s !important; }
+
+
+/* ═══════════════════════════════════════
+   TABLE ROW ENTRANCE
+   ═══════════════════════════════════════ */
+.admin-card tr {
+  animation: up-fade-in 0.35s ease both !important;
+}
+
+.admin-card tbody tr:nth-child(1)  { animation-delay: 0.05s !important; }
+.admin-card tbody tr:nth-child(2)  { animation-delay: 0.09s !important; }
+.admin-card tbody tr:nth-child(3)  { animation-delay: 0.13s !important; }
+.admin-card tbody tr:nth-child(4)  { animation-delay: 0.16s !important; }
+.admin-card tbody tr:nth-child(5)  { animation-delay: 0.18s !important; }
+.admin-card tbody tr:nth-child(n+6){ animation-delay: 0.20s !important; }
+
+
+/* ═══════════════════════════════════════
+   LOGO BREATHE
+   ═══════════════════════════════════════ */
+@keyframes up-logo-breathe {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(10,132,255,0.20)); }
+  50%       { filter: drop-shadow(0 0 12px rgba(10,132,255,0.35)); }
+}
+
+.logo img {
+  animation: up-logo-breathe 4s ease-in-out infinite !important;
+}
+
+
+/* ═══════════════════════════════════════
+   MOBILE — Reduce Motion
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Simplify stagger on mobile */
+  .grid > * {
+    animation-delay: 0.04s !important;
+  }
+
+  .grid > *:nth-child(n) {
+    animation-delay: 0.04s !important;
+  }
+
+  /* Disable hover transforms on touch */
+  @media (hover: none) {
+    .card:hover, .nav-item:hover, .cat-tab:hover, .type-tab:hover,
+    .admin-card:hover, .score-card:hover {
+      transform: none !important;
+    }
+
+    button:hover { transform: none !important; }
+
+    .search-bar:focus-within { transform: none !important; }
+  }
+}
+
+
+/* ═══════════════════════════════════════
+   prefers-reduced-motion KILL SWITCH
+   ═══════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.08ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  /* Instant opacity restore */
+  .main, .content, .sidebar, .header,
+  .filter-section, .admin-card, .nav-item,
+  .cat-tab, .type-tab, .score-card, .stat-card,
+  .card, .choice-btn, .modal, .toast {
+    opacity: 1 !important;
+  }
+}

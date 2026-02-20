@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Teacher OS - Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive-fix.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg">
+  <style>
+    /* Admin-specific styles — Dark Aurora */
+    .content {
+      flex: 1; padding: 40px 50px;
+      overflow-y: auto; overflow-x: hidden;
+      position: relative; z-index: 10;
+      background:
+        radial-gradient(ellipse 60% 60% at 15% 15%, rgba(6, 214, 160, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 85% 85%, rgba(123, 97, 255, 0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 45% at 50% 50%, rgba(255, 107, 157, 0.05) 0%, transparent 50%),
+        #06080F;
+    }
+    .page-header { margin-bottom: 30px; }
+
+    .page-title {
+      font-size: clamp(1.35rem, 3vw, 1.8rem); font-weight: 800; margin: 0;
+      letter-spacing: -0.5px;
+      background: var(--gradient-aurora);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: gradient-text 6s ease-in-out infinite;
+    }
+
+    @keyframes gradient-text {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    @keyframes card-fade-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-card {
+      background: #121626;
+      border-radius: 24px; padding: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top aurora line */
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-aurora);
+      background-size: 200% 100%;
+      animation: border-flow 5s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes border-flow {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .admin-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+
+    .form-row { display: flex; gap: 18px; margin-bottom: 18px; flex-wrap: wrap; }
+    .form-col { flex: 1; min-width: 180px; }
+
+    label {
+      display: block; margin-bottom: 8px;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text-muted, #5A6480);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    input, select, textarea {
+      width: 100%; padding: 13px 16px;
+      background: var(--bg-input, rgba(28,34,58,0.7));
+      border: 1.5px solid var(--border, rgba(255,255,255,0.06));
+      border-radius: 16px; font-family: inherit; font-size: 1rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      color: var(--text-main, #E8ECF4);
+      box-sizing: border-box;
+      -webkit-appearance: none; appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      background: var(--bg-elevated, rgba(22,26,46,0.92));
+      border-color: var(--border-focus, rgba(123,97,255,0.5));
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(123,97,255,0.12);
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--text-muted, #5A6480); }
+
+    button {
+      background: var(--gradient-primary, linear-gradient(135deg, #06D6A0, #7B61FF));
+      color: white; border: none; padding: 13px 24px;
+      border-radius: 16px; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(123,97,255,0.25);
+      min-height: 44px;
+      position: relative; overflow: hidden;
+      -webkit-appearance: none; appearance: none;
+    }
+
+    button:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(123,97,255,0.35); }
+    button:active { transform: scale(0.97); transition-duration: 0.08s; box-shadow: 0 4px 12px rgba(123,97,255,0.2); }
+
+    button.del {
+      background: rgba(255,107,157,0.1); color: #FF6B9D;
+      padding: 8px 14px; font-size: 0.82rem; border-radius: 12px;
+      box-shadow: none; min-height: 36px;
+      border: 1px solid rgba(255,107,157,0.2);
+    }
+    button.del:hover { background: rgba(255,107,157,0.18); transform: none; box-shadow: none; }
+
+    button.toggle {
+      background: rgba(255,255,255,0.04); color: var(--text-muted, #5A6480);
+      border: 1px solid var(--border, rgba(255,255,255,0.06));
+      padding: 6px 14px; border-radius: 100px; font-size: 0.8rem;
+      box-shadow: none; min-height: 32px;
+    }
+    button.toggle.active { background: rgba(6,214,160,0.12); color: #06D6A0; border-color: rgba(6,214,160,0.3); font-weight: 700; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th {
+      text-align: left; padding: 12px 16px;
+      color: var(--text-muted, #5A6480); font-size: 0.72rem;
+      border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 16px; border-bottom: 1px solid var(--divider, rgba(255,255,255,0.04));
+      font-size: 0.9rem; vertical-align: middle; color: var(--text-main);
+    }
+    tr:hover td { background: rgba(123,97,255,0.04); }
+    tr:last-child td { border-bottom: none; }
+
+    .badge {
+      padding: 4px 12px; border-radius: 100px;
+      font-size: 0.7rem; font-weight: 700;
+      background: rgba(123,97,255,0.12); color: var(--accent-light, #9B85FF);
+      display: inline-block; white-space: nowrap;
+    }
+
+    /* Key generator grid */
+    .key-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px; background: var(--bg-input, rgba(28,34,58,0.7));
+      padding: 20px; border-radius: 20px;
+      border: 1px solid var(--border, rgba(255,255,255,0.06));
+    }
+    .key-item {
+      display: flex; align-items: center;
+      background: var(--bg-card, rgba(18,22,38,0.72)); padding: 6px 12px;
+      border-radius: 12px; border: 1px solid var(--border, rgba(255,255,255,0.06));
+    }
+    .key-item span { color: var(--text-sub); font-size: 0.82rem; width: 28px; }
+    .key-item select {
+      padding: 4px; border: none; background: transparent;
+      font-weight: 700; color: var(--aurora-1, #06D6A0); cursor: pointer; font-size: 0.85rem;
+    }
+    .key-item select:focus { box-shadow: none; border: none; outline: none; }
+    .key-item select option { background: #1a1e30; color: #fff; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 20px 16px; }
+      .form-row { flex-direction: column; gap: 12px; }
+      table { font-size: 0.82rem; }
+      th, td { padding: 10px 12px; }
+    }
+
+    @media (max-width: 400px) {
+      .content { padding: 16px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo"><img src="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg" alt="Sci-Spark" style="width:40px;height:40px;border-radius:16px;"> Sci-Spark</div>
+    <div class="nav-item active" onclick="tab('files', this)">📂 Documents</div>
+    <div class="nav-item" onclick="tab('exam', this)">📝 Examinations</div>
+    <div class="nav-item" onclick="tab('score', this)">📊 Gradebook</div>
+    <div class="nav-item" onclick="location.href='scores-admin.html'">📢 Score Announce</div>
+  </div>
+
+  <div class="content">
+    
+    <!-- Files -->
+    <div id="tab-files">
+       <div class="page-header"><h1 class="page-title">Manage Documents</h1></div>
+       <div class="admin-card">
+         <div class="form-row">
+           <div class="form-col">
+             <label>Subject</label>
+             <select id="f-cat">
+               <option>Mathematics</option>
+               <option>Physics</option>
+               <option>Chemistry</option>
+               <option>Biology</option>
+               <option>Astronomy</option>
+               <option>Earth & Space</option>
+             </select>
+           </div>
+           <div class="form-col">
+             <label>Type</label>
+             <select id="f-type"><option value="Sheet">Sheet (PDF)</option><option value="Note">Note (Summary)</option><option value="Video">Video Clip</option></select>
+           </div>
+         </div>
+         <label>Title</label>
+         <input id="f-title" placeholder="Document Name" style="margin-bottom:20px;">
+         <label>Link (URL)</label>
+         <input id="f-link" placeholder="Google Drive / YouTube Link" style="margin-bottom:20px;">
+         <button onclick="addFileHandler()">+ Add Resource</button>
+       </div>
+       <div id="file-list"></div>
+    </div>
+
+    <!-- Exams -->
+    <div id="tab-exam" class="hidden">
+       <div class="page-header"><h1 class="page-title">Exam Creator</h1></div>
+       <div class="admin-card">
+         <div class="form-row">
+            <div class="form-col"><label>Exam Title</label><input id="e-title" placeholder="Midterm 2024"></div>
+            <div class="form-col">
+              <label>Subject</label>
+              <select id="e-cat">
+                <option>Mathematics</option>
+                <option>Physics</option>
+                <option>Chemistry</option>
+                <option>Biology</option>
+              </select>
+            </div>
+            <div class="form-col">
+              <label>Exam Type</label>
+              <select id="e-type" onchange="updateExamTypeUI()">
+                <option value="Mixed">Mixed (MC + Written)</option>
+                <option value="MC">Multiple Choice Only</option>
+                <option value="Written">Written Only</option>
+              </select>
+            </div>
+          </div>
+          
+          <div id="mc-section" style="margin: 30px 0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+               <label style="margin:0;">Multiple Choice Key</label>
+               <div style="display:flex; align-items:center; gap:10px;">
+                 <span style="font-size:0.85rem; color:var(--text-sub);">Questions:</span>
+                 <input type="number" id="e-mc-count" value="10" min="0" style="width:70px; padding:10px;" oninput="renderKeys()">
+               </div>
+            </div>
+            <div id="key-container" class="key-grid"></div>
+          </div>
+
+          <div id="written-section" style="margin-bottom:30px;">
+             <label>Written Questions (Count)</label>
+             <input type="number" id="e-written-count" placeholder="0" min="0" style="width:100px;">
+         </div>
+
+         <button onclick="createExamHandler()">Create Exam</button>
+       </div>
+       <div id="exam-list"></div>
+    </div>
+
+    <!-- Scores -->
+    <div id="tab-score" class="hidden">
+       <div class="page-header"><h1 class="page-title">Student Scores</h1></div>
+       <div class="admin-card" style="display:flex; align-items:center; gap:20px;">
+          <label style="margin:0;">Select Exam:</label>
+          <select id="score-filter" onchange="loadScoresHandler()" style="flex:1;"><option>Loading...</option></select>
+       </div>
+       <div id="score-table"></div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/cache-layer.js"></script>
+  <script src="js/request-queue.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/ambient.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('[SW] Registered:', reg.scope); })
+          .catch(function(err) { console.warn('[SW] Registration failed:', err); });
+      });
+    }
+  </script>
+</body>
+</html>

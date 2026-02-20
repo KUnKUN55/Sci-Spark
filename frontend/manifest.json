@@ -1,0 +1,24 @@
+{
+  "name": "Sci-Spark Portal",
+  "short_name": "Sci-Spark",
+  "description": "Student Portal — Science Learning Platform",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06080F",
+  "theme_color": "#7B61FF",
+  "icons": [
+    {
+      "src": "https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "categories": ["education"],
+  "lang": "th"
+}

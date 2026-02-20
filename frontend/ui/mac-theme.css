@@ -1,0 +1,761 @@
+/* ═══════════════════════════════════════════════════════════════════
+   🍎 MAC-THEME.CSS — macOS / iOS / VisionOS Visual Identity
+   ═══════════════════════════════════════════════════════════════════
+   ✅ Load-order: after styles.css — visual overrides only
+   ✅ Zero touch on IDs, JS logic, API, data flow
+   ✅ Removable: delete file + <link> tag
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════
+   🎨 DESIGN TOKENS — macOS HIG
+   ══════════════════════════════ */
+:root {
+  /* ── SF Pro System Font Stack ── */
+  --mac-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+              "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+
+  /* ── vibrancy materials ── */
+  --mac-blur-sm:  20px;
+  --mac-blur:     48px;
+  --mac-blur-lg:  72px;
+
+  /* ── backgrounds ── */
+  --mac-bg-window:    rgba(248, 248, 250, 0.85);
+  --mac-bg-sidebar:   rgba(232, 232, 238, 0.72);
+  --mac-bg-card:      rgba(255, 255, 255, 0.75);
+  --mac-bg-elevated:  rgba(255, 255, 255, 0.94);
+  --mac-bg-glass:     rgba(255, 255, 255, 0.55);
+  --mac-bg-input:     rgba(255, 255, 255, 0.78);
+  --mac-bg-btn:       rgba(0, 0, 0, 0.055);
+
+  /* ── macOS wallpaper gradient (subtle) ── */
+  --mac-wallpaper: linear-gradient(160deg,
+    #e6eaf2 0%, #dde3ef 25%, #e8e4f0 55%, #e2eaf4 100%);
+
+  /* ── shadows — layered, diffuse, macOS style ── */
+  --mac-shadow-0:  0 0 0 0.5px rgba(0,0,0,0.06);
+  --mac-shadow-1:  0 1px 3px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --mac-shadow-2:  0 4px 14px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --mac-shadow-3:  0 8px 28px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --mac-shadow-float: 0 20px 60px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.05);
+  --mac-shadow-modal: 0 32px 80px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.06);
+
+  /* ── borders ── */
+  --mac-border:        rgba(0, 0, 0, 0.08);
+  --mac-border-strong: rgba(0, 0, 0, 0.12);
+  --mac-border-inset:  rgba(255, 255, 255, 0.65); /* inner highlight */
+
+  /* ── macOS system blue (authentic) ── */
+  --mac-accent:      #007AFF;
+  --mac-accent-dark: #0062CC;
+  --mac-accent-dim:  rgba(0, 122, 255, 0.10);
+  --mac-accent-glow: rgba(0, 122, 255, 0.22);
+
+  /* ── semantic text (macOS HIG) ── */
+  --mac-label:           rgba(0, 0, 0, 0.88);   /* primary label */
+  --mac-label-secondary: rgba(0, 0, 0, 0.50);   /* secondary */
+  --mac-label-tertiary:  rgba(0, 0, 0, 0.30);   /* tertiary */
+  --mac-label-quaternary:rgba(0, 0, 0, 0.18);   /* quaternary */
+
+  /* ── radii — macOS window chrome ── */
+  --mac-r-sm:  6px;
+  --mac-r:     10px;
+  --mac-r-md:  14px;
+  --mac-r-lg:  18px;
+  --mac-r-xl:  22px;
+  --mac-r-win: 12px; /* macOS window corners */
+}
+
+
+/* ══════════════════════════════
+   🖥 BODY / ROOT — macOS desktop
+   ══════════════════════════════ */
+html {
+  font-family: var(--mac-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--mac-font);
+  background: var(--mac-wallpaper);
+  letter-spacing: -0.01em; /* SF Pro tighter spacing */
+}
+
+
+/* ══════════════════════════════
+   🪟 APP WINDOW SHELL
+   ══════════════════════════════ */
+.app-wrapper,
+.wrapper,
+body > .sidebar ~ .main,
+body > .sidebar ~ .content {
+  /* macOS window sits above wallpaper */
+  background: transparent;
+}
+
+
+/* ══════════════════════════════
+   📐 SIDEBAR — macOS vibrancy panel
+   ══════════════════════════════ */
+.sidebar {
+  background: var(--mac-bg-sidebar) !important;
+  backdrop-filter: blur(var(--mac-blur)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur)) saturate(180%) !important;
+  border-right: 0.5px solid var(--mac-border) !important;
+  box-shadow: none !important; /* mac sidebar has no shadow */
+  width: 220px !important;
+  min-width: 220px !important;
+}
+
+/* macOS sidebar no rounded corners on outer edges */
+.sidebar {
+  border-radius: 0 !important;
+}
+
+/* Logo row — macOS window drag-area feel */
+.logo {
+  font-family: var(--mac-font);
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: -0.02em !important;
+  color: var(--mac-label) !important;
+  padding: 18px 16px 14px !important;
+  user-select: none;
+  -webkit-user-select: none;
+  border-bottom: 0.5px solid var(--mac-border);
+  margin-bottom: 8px;
+}
+
+.logo img {
+  border-radius: 8px !important;
+  animation: none !important; /* disable float for mac feel */
+}
+
+/* Nav group label */
+.nav-label {
+  font-family: var(--mac-font) !important;
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+  color: var(--mac-label-tertiary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  padding: 10px 16px 4px !important;
+}
+
+/* Nav items — macOS sidebar row style */
+.nav-item {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  color: var(--mac-label) !important;
+  padding: 7px 10px 7px 12px !important;
+  border-radius: var(--mac-r) !important;
+  margin: 1px 6px !important;
+  min-height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  transition: background 0.12s ease, color 0.12s ease !important;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  transform: none !important; /* mac doesn't lift on hover */
+}
+
+.nav-item.active {
+  background: var(--mac-accent) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+
+.nav-item.active:hover {
+  background: var(--mac-accent-dark) !important;
+}
+
+
+/* ══════════════════════════════
+   📄 MAIN CONTENT AREA
+   ══════════════════════════════ */
+.main,
+.content {
+  background: transparent !important;
+  font-family: var(--mac-font) !important;
+}
+
+/* macOS subtle wallpaper texture behind content */
+.main::before,
+.content::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(180,196,224,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 90% 80%, rgba(172,183,214,0.14) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ══════════════════════════════
+   🗂 PAGE TITLE — macOS Large Title
+   ══════════════════════════════ */
+.page-title,
+h1.page-title {
+  font-family: var(--mac-font) !important;
+  font-size: clamp(1.55rem, 3.5vw, 2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--mac-label) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--mac-label) !important;
+  animation: none !important;
+  line-height: 1.15 !important;
+}
+
+
+/* ══════════════════════════════
+   🔍 SEARCH — macOS spotlight feel
+   ══════════════════════════════ */
+.search-bar {
+  background: var(--mac-bg-input) !important;
+  backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: 100px !important; /* macOS pill search */
+  box-shadow: var(--mac-shadow-0) !important;
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  color: var(--mac-label) !important;
+  padding: 8px 16px 8px 36px !important;
+  height: 32px !important;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+
+.search-bar:focus {
+  border-color: var(--mac-accent) !important;
+  box-shadow: 0 0 0 3px var(--mac-accent-glow), var(--mac-shadow-0) !important;
+  outline: none !important;
+  background: var(--mac-bg-elevated) !important;
+}
+
+.search-bar::placeholder {
+  color: var(--mac-label-tertiary) !important;
+  font-family: var(--mac-font) !important;
+}
+
+
+/* ══════════════════════════════
+   🃏 CARDS — macOS floating panel
+   ══════════════════════════════ */
+.card {
+  background: var(--mac-bg-card) !important;
+  backdrop-filter: blur(var(--mac-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur)) saturate(160%) !important;
+  border-radius: var(--mac-r-lg) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  box-shadow: var(--mac-shadow-2) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+  font-family: var(--mac-font) !important;
+  overflow: hidden !important;
+}
+
+/* macOS card top highlight (inner border) */
+.card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 0.5px !important;
+  background: var(--mac-border-inset) !important;
+  pointer-events: none !important;
+  border-radius: var(--mac-r-lg) var(--mac-r-lg) 0 0 !important;
+  z-index: 1 !important;
+}
+
+.card:hover {
+  box-shadow: var(--mac-shadow-3) !important;
+  transform: translateY(-2px) !important;
+}
+
+.card:active {
+  transform: scale(0.985) !important;
+  box-shadow: var(--mac-shadow-1) !important;
+  transition-duration: 0.1s !important;
+}
+
+.card-title {
+  font-family: var(--mac-font) !important;
+  font-weight: 590 !important; /* SF Pro Display weight */
+  font-size: clamp(0.95rem, 2vw, 1.08rem) !important;
+  color: var(--mac-label) !important;
+  letter-spacing: -0.015em !important;
+}
+
+.card-sub,
+.card-meta {
+  font-family: var(--mac-font) !important;
+  font-size: clamp(0.78rem, 1.8vw, 0.85rem) !important;
+  color: var(--mac-label-secondary) !important;
+}
+
+/* Card icon — macOS SF Symbol-style rounded icon */
+.card-icon {
+  border-radius: var(--mac-r-md) !important;
+  box-shadow: var(--mac-shadow-1) !important;
+}
+
+
+/* ══════════════════════════════
+   🔘 BUTTONS — macOS control style
+   ══════════════════════════════ */
+
+/* Primary action — macOS blue button */
+.primary-btn {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  background: var(--mac-accent) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: var(--mac-r) !important;
+  padding: 10px 20px !important;
+  min-height: 32px !important;
+  box-shadow:
+    0 1px 3px rgba(0,122,255,0.35),
+    0 0 0 0.5px rgba(0,100,200,0.3) !important;
+  animation: none !important; /* disable neon pulse */
+  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease !important;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--mac-accent-dark) !important;
+  box-shadow:
+    0 2px 8px rgba(0,122,255,0.40),
+    0 0 0 0.5px rgba(0,80,170,0.3) !important;
+  transform: none !important; /* macOS buttons don't lift */
+}
+
+.primary-btn:active {
+  transform: scale(0.97) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Secondary */
+.secondary-btn,
+.action-btn {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  background: var(--mac-bg-btn) !important;
+  color: var(--mac-label) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: var(--mac-r) !important;
+  padding: 7px 14px !important;
+  min-height: 32px !important;
+  box-shadow: var(--mac-shadow-0) !important;
+  transition: background 0.12s ease !important;
+}
+
+.secondary-btn:hover,
+.action-btn:hover {
+  background: rgba(0,0,0,0.09) !important;
+  transform: none !important;
+}
+
+
+/* ══════════════════════════════
+   📋 INPUTS / FORMS — macOS text fields
+   ══════════════════════════════ */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  color: var(--mac-label) !important;
+  background: var(--mac-bg-input) !important;
+  border: 0.5px solid var(--mac-border-strong) !important;
+  border-radius: var(--mac-r) !important;
+  padding: 9px 12px !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.04),
+    0 0 0 0.5px rgba(0,0,0,0.02) !important;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+  letter-spacing: -0.005em !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--mac-accent) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.04),
+    0 0 0 3px var(--mac-accent-glow) !important;
+  outline: none !important;
+  background: var(--mac-bg-elevated) !important;
+  transform: none !important; /* remove the translateY bug */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--mac-label-tertiary) !important;
+  font-family: var(--mac-font) !important;
+}
+
+
+/* ══════════════════════════════
+   🗂 FILTER TABS — macOS segmented control
+   ══════════════════════════════ */
+.filter-section,
+.filter-tabs {
+  background: rgba(0, 0, 0, 0.045) !important;
+  border-radius: 10px !important;
+  padding: 3px !important;
+  display: inline-flex !important;
+  gap: 2px !important;
+  border: 0.5px solid var(--mac-border) !important;
+  box-shadow: none !important;
+}
+
+.cat-tab,
+.type-tab {
+  font-family: var(--mac-font) !important;
+  font-size: 0.82rem !important;
+  font-weight: 400 !important;
+  padding: 5px 14px !important;
+  border-radius: 8px !important;
+  min-height: 28px !important;
+  color: var(--mac-label-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background 0.12s ease, color 0.12s ease !important;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.cat-tab.active,
+.type-tab.active {
+  background: var(--mac-bg-elevated) !important;
+  color: var(--mac-label) !important;
+  font-weight: 500 !important;
+  box-shadow: var(--mac-shadow-1) !important;
+}
+
+.cat-tab:hover:not(.active),
+.type-tab:hover:not(.active) {
+  background: rgba(0,0,0,0.05) !important;
+  color: var(--mac-label) !important;
+}
+
+
+/* ══════════════════════════════
+   📝 EXAM PAPER — macOS document
+   ══════════════════════════════ */
+.exam-paper {
+  background: var(--mac-bg-elevated) !important;
+  border-radius: var(--mac-r-xl) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  box-shadow: var(--mac-shadow-float) !important;
+  font-family: var(--mac-font) !important;
+}
+
+.choice-btn {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  background: rgba(0,0,0,0.03) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: var(--mac-r) !important;
+  color: var(--mac-label) !important;
+  box-shadow: none !important;
+  transition: background 0.12s ease, box-shadow 0.12s ease !important;
+  min-height: 44px !important;
+}
+
+.choice-btn:hover {
+  background: var(--mac-accent-dim) !important;
+  border-color: var(--mac-accent) !important;
+  transform: none !important;
+}
+
+.choice-btn.selected {
+  background: var(--mac-accent) !important;
+  border-color: var(--mac-accent-dark) !important;
+  color: white !important;
+  box-shadow: 0 1px 3px rgba(0,122,255,0.3) !important;
+}
+
+.choice-btn.correct { background: rgba(52,199,89,0.12) !important; border-color: rgba(52,199,89,0.4) !important; color: #1a7a32 !important; }
+.choice-btn.wrong   { background: rgba(255,59,48,0.10) !important; border-color: rgba(255,59,48,0.35) !important; color: #c0392b !important; }
+
+
+/* ══════════════════════════════
+   📱 BOTTOM NAV — iOS tab bar
+   ══════════════════════════════ */
+.bottom-nav {
+  background: rgba(248, 248, 252, 0.88) !important;
+  backdrop-filter: blur(var(--mac-blur)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur)) saturate(180%) !important;
+  border-top: 0.5px solid var(--mac-border) !important;
+  box-shadow: none !important;
+}
+
+.b-nav-item {
+  font-family: var(--mac-font) !important;
+  font-size: 0.65rem !important;
+  font-weight: 400 !important;
+  color: var(--mac-label-tertiary) !important;
+  transition: color 0.12s ease !important;
+}
+
+.b-nav-item.active {
+  color: var(--mac-accent) !important;
+}
+
+.b-nav-icon {
+  font-size: 1.5rem !important;
+}
+
+
+/* ══════════════════════════════
+   🧩 MODALS — macOS sheet / panel
+   ══════════════════════════════ */
+.modal,
+.modal-content {
+  background: var(--mac-bg-elevated) !important;
+  backdrop-filter: blur(var(--mac-blur-lg)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur-lg)) saturate(180%) !important;
+  border-radius: var(--mac-r-xl) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  box-shadow: var(--mac-shadow-modal) !important;
+  font-family: var(--mac-font) !important;
+}
+
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+
+/* ══════════════════════════════
+   📊 TABLES — macOS list view
+   ══════════════════════════════ */
+table {
+  font-family: var(--mac-font) !important;
+}
+
+th {
+  font-family: var(--mac-font) !important;
+  font-weight: 500 !important;
+  font-size: 0.72rem !important;
+  color: var(--mac-label-secondary) !important;
+  letter-spacing: 0.02em !important;
+}
+
+td {
+  font-family: var(--mac-font) !important;
+  font-size: 0.875rem !important;
+  color: var(--mac-label) !important;
+}
+
+tr:hover td {
+  background: rgba(0, 0, 0, 0.025) !important;
+}
+
+
+/* ══════════════════════════════
+   🏷 BADGES — macOS label style
+   ══════════════════════════════ */
+.badge,
+.type-badge {
+  font-family: var(--mac-font) !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  background: var(--mac-accent-dim) !important;
+  color: var(--mac-accent) !important;
+  border-radius: 100px !important;
+  padding: 2px 8px !important;
+}
+
+
+/* ══════════════════════════════
+   📋 ADMIN CARD — macOS panel
+   ══════════════════════════════ */
+.admin-card,
+.score-card {
+  background: var(--mac-bg-card) !important;
+  backdrop-filter: blur(var(--mac-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur)) saturate(160%) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: var(--mac-r-lg) !important;
+  box-shadow: var(--mac-shadow-2) !important;
+  font-family: var(--mac-font) !important;
+  transition: box-shadow 0.2s ease !important;
+}
+
+.admin-card:hover,
+.score-card:hover {
+  box-shadow: var(--mac-shadow-3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Labels in admin forms */
+label {
+  font-family: var(--mac-font) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: var(--mac-label-secondary) !important;
+  letter-spacing: 0.01em !important;
+}
+
+
+/* ══════════════════════════════
+   📣 TOASTS — macOS notification banner
+   ══════════════════════════════ */
+.toast {
+  font-family: var(--mac-font) !important;
+  border-radius: 14px !important;
+  background: rgba(40, 40, 44, 0.94) !important;
+  color: white !important;
+  backdrop-filter: blur(var(--mac-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur)) !important;
+  box-shadow: var(--mac-shadow-float) !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  padding: 12px 20px !important;
+  border: 0.5px solid rgba(255,255,255,0.12) !important;
+}
+
+.toast.success { background: rgba(30, 100, 60, 0.92) !important; }
+.toast.error   { background: rgba(180, 30, 30, 0.92) !important; }
+
+
+/* ══════════════════════════════
+   🌙 STAT CARDS
+   ══════════════════════════════ */
+.stat-card {
+  background: var(--mac-bg-card) !important;
+  backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: var(--mac-r-lg) !important;
+  box-shadow: var(--mac-shadow-1) !important;
+}
+
+.stat-card .stat-value {
+  font-family: var(--mac-font) !important;
+  font-size: clamp(1.8rem, 4vw, 2.4rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  background: linear-gradient(160deg, var(--mac-accent) 0%, #34AADC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.stat-card .stat-label {
+  font-family: var(--mac-font) !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  color: var(--mac-label-secondary) !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+
+/* ══════════════════════════════
+   📌 HEADER — macOS toolbar
+   ══════════════════════════════ */
+.header {
+  background: rgba(248, 248, 250, 0.72) !important;
+  backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-blur-sm)) !important;
+  border-bottom: 0.5px solid var(--mac-border) !important;
+  font-family: var(--mac-font) !important;
+}
+
+
+/* ══════════════════════════════
+   🗒 GLOBAL TYPOGRAPHY RESET
+   ══════════════════════════════ */
+h1, h2, h3, h4, h5, h6,
+p, span, div, a, li, td, th,
+input, button, select, textarea, label {
+  font-family: var(--mac-font);
+}
+
+h1, h2, h3 { letter-spacing: -0.025em; }
+h4, h5, h6 { letter-spacing: -0.015em; }
+p, li, td { letter-spacing: -0.005em; line-height: 1.5; }
+
+
+/* ══════════════════════════════
+   🔐 LOGIN BOX — macOS panel
+   ══════════════════════════════ */
+.login-box {
+  background: var(--mac-bg-elevated) !important;
+  border: 0.5px solid var(--mac-border) !important;
+  border-radius: var(--mac-r-xl) !important;
+  box-shadow: var(--mac-shadow-modal) !important;
+  font-family: var(--mac-font) !important;
+  padding: 36px !important;
+}
+
+.login-overlay {
+  background: rgba(30, 32, 40, 0.40) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+
+/* ══════════════════════════════
+   ⌨️ SCROLLBARS — macOS thin style
+   ══════════════════════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.20);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.30); }
+
+* { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent; }
+
+
+/* ══════════════════════════════
+   🌈 SELECTION
+   ══════════════════════════════ */
+::selection {
+  background: rgba(0, 122, 255, 0.25);
+  color: inherit;
+}
+
+
+/* ══════════════════════════════
+   📐 HEADER RESPONSIVE
+   ══════════════════════════════ */
+@media (max-width: 768px) {
+  .header {
+    background: transparent !important;
+    border-bottom: none !important;
+    backdrop-filter: none !important;
+  }
+}

@@ -1,0 +1,701 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   💎 PREMIUM-POLISH.CSS — Targeted WOW Upgrades
+   ═══════════════════════════════════════════════════════════════════════
+   Targets: Library header, search bar, filter tabs, page title,
+   admin form inputs/selects/buttons, add-resource button.
+   Loads LAST → overrides everything.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════════
+   🎯 PAGE TITLE — Animated Gradient Text
+   ══════════════════════════════════════ */
+.page-title,
+h1.page-title,
+h1#page-header {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: clamp(1.7rem, 4.5vw, 2.4rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.15 !important;
+
+  /* Animated gradient text */
+  background: linear-gradient(
+    135deg,
+    #0A84FF 0%,
+    #5AC8FA 25%,
+    #BF5AF2 50%,
+    #0A84FF 75%,
+    #5AC8FA 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  animation: ultra-title-gradient 8s ease infinite !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+
+  /* Subtle text shadow through filter */
+  filter: drop-shadow(0 2px 12px rgba(10,132,255,0.15)) !important;
+  position: relative !important;
+}
+
+/* Left accent bar */
+.page-title::before,
+h1.page-title::before {
+  content: '' !important;
+  position: absolute !important;
+  left: -16px !important;
+  top: 8% !important;
+  bottom: 8% !important;
+  width: 4px !important;
+  border-radius: 100px !important;
+  background: linear-gradient(180deg, #0A84FF, #5AC8FA, #BF5AF2) !important;
+  background-size: 100% 200% !important;
+  animation: ultra-bar-shimmer 4s ease-in-out infinite alternate !important;
+}
+
+@keyframes ultra-title-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes ultra-bar-shimmer {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+
+/* ══════════════════════════════════════
+   🔍 SEARCH BAR — Spotlight Glass
+   ══════════════════════════════════════ */
+.search-bar {
+  background: rgba(255,255,255,0.50) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 1px solid rgba(255,255,255,0.65) !important;
+  border-radius: 100px !important;
+  padding: 12px 22px 12px 18px !important;
+  min-width: 260px !important;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.05),
+    0 8px 24px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.75) !important;
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Internal glow sweep on idle */
+.search-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: -80% !important;
+  width: 60% !important; height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  ) !important;
+  animation: ultra-search-sweep 6s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+@keyframes ultra-search-sweep {
+  0%   { left: -80%; }
+  50%  { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* Search icon */
+.search-bar span:first-child {
+  font-size: 1.1em !important;
+  filter: saturate(1.4) brightness(0.9) !important;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1) !important;
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+.search-bar:focus-within span:first-child {
+  transform: scale(1.15) rotate(-8deg) !important;
+  filter: saturate(2) brightness(1) !important;
+}
+
+/* Search input */
+.search-input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 420 !important;
+  color: #0F172A !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.search-input::placeholder {
+  color: rgba(0,0,0,0.30) !important;
+  font-weight: 400 !important;
+}
+
+/* Focus: expand + glow ring */
+.search-bar:focus-within {
+  background: rgba(255,255,255,0.72) !important;
+  border-color: rgba(10,132,255,0.35) !important;
+  box-shadow:
+    0 0 0 4px rgba(10,132,255,0.12),
+    0 4px 16px rgba(10,132,255,0.10),
+    0 12px 40px rgba(10,132,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.8) !important;
+  width: 340px !important;
+  transform: scale(1.02) !important;
+}
+
+
+/* ══════════════════════════════════════
+   🏷 FILTER TABS — Pill Glass System
+   ══════════════════════════════════════ */
+
+/* Container wrapper */
+.filter-section {
+  background: rgba(255,255,255,0.35) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  border-radius: 22px !important;
+  padding: 16px 20px !important;
+  border: 0.5px solid rgba(255,255,255,0.60) !important;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.04),
+    0 8px 28px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.7) !important;
+  margin-bottom: 28px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  animation: ultra-filter-enter 0.5s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+/* Subtle animated gradient border at top */
+.filter-section::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #0A84FF, #5AC8FA, #BF5AF2, #30D5C8, #0A84FF) !important;
+  background-size: 300% 100% !important;
+  animation: ultra-border-flow 6s linear infinite !important;
+  border-radius: 22px 22px 0 0 !important;
+  pointer-events: none !important;
+}
+
+@keyframes ultra-border-flow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes ultra-filter-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Tab containers */
+.cat-tabs {
+  display: flex !important;
+  gap: 8px !important;
+  padding-bottom: 6px !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.cat-tabs::-webkit-scrollbar { display: none !important; }
+
+.type-tabs {
+  display: flex !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 0.5px solid rgba(0,0,0,0.04) !important;
+}
+
+/* Individual tabs — glass pills */
+.cat-tab,
+.type-tab {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 480 !important;
+  letter-spacing: -0.01em !important;
+  padding: 9px 20px !important;
+  border-radius: 100px !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  border: 1px solid transparent !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  /* Glass */
+  background: rgba(255,255,255,0.48) !important;
+  color: rgba(15,23,42,0.55) !important;
+  box-shadow:
+    0 1px 4px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.6) !important;
+
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+/* Hover: glow lift */
+.cat-tab:hover,
+.type-tab:hover {
+  background: rgba(255,255,255,0.72) !important;
+  color: #0A84FF !important;
+  border-color: rgba(10,132,255,0.15) !important;
+  box-shadow:
+    0 2px 8px rgba(10,132,255,0.08),
+    0 0 0 1px rgba(10,132,255,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.7) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Active state — gradient accent chip */
+.cat-tab.active,
+.type-tab.active {
+  background: linear-gradient(135deg, #0A84FF 0%, #5AC8FA 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 4px 16px rgba(10,132,255,0.30),
+    0 1px 4px rgba(10,132,255,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.20) !important;
+  transform: translateY(0) !important;
+}
+
+/* Active hover — deeper */
+.cat-tab.active:hover,
+.type-tab.active:hover {
+  box-shadow:
+    0 6px 20px rgba(10,132,255,0.35),
+    0 2px 6px rgba(10,132,255,0.22) !important;
+  transform: translateY(-1px) !important;
+  filter: brightness(1.05) !important;
+}
+
+/* Click — haptic */
+.cat-tab:active,
+.type-tab:active {
+  transform: scale(0.95) !important;
+  transition-duration: 0.08s !important;
+}
+
+
+/* ══════════════════════════════════════
+   🔬 HEADER BAR — Frosted Toolbar
+   ══════════════════════════════════════ */
+.header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding-bottom: 20px !important;
+  margin-bottom: 28px !important;
+  border-bottom: 0.5px solid rgba(0,0,0,0.04) !important;
+  gap: 16px !important;
+  animation: ultra-filter-enter 0.4s cubic-bezier(0.22,1,0.36,1) both !important;
+  position: relative !important;
+}
+
+
+/* ══════════════════════════════════════
+   📋 ADMIN — Premium Inputs & Selects
+   ══════════════════════════════════════ */
+
+/* Form inputs */
+.admin-card input[type="text"],
+.admin-card input[type="url"],
+.admin-card input[type="number"],
+.admin-card textarea,
+.admin-card select {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 420 !important;
+  color: #0F172A !important;
+  padding: 14px 18px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  background: rgba(255,255,255,0.55) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.03),
+    0 1px 0 rgba(255,255,255,0.6) !important;
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Focus: glow ring + elevation */
+.admin-card input:focus,
+.admin-card textarea:focus,
+.admin-card select:focus {
+  background: rgba(255,255,255,0.82) !important;
+  border-color: rgba(10,132,255,0.40) !important;
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.02),
+    0 0 0 4px rgba(10,132,255,0.12),
+    0 4px 16px rgba(10,132,255,0.08),
+    0 0 24px rgba(10,132,255,0.04) !important;
+  outline: none !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Select arrow */
+.admin-card select {
+  padding-right: 42px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230A84FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  background-size: 16px !important;
+  cursor: pointer !important;
+}
+
+/* Select option dropdown styling (Chrome) */
+.admin-card select option {
+  padding: 12px 16px !important;
+  font-size: 0.92rem !important;
+  background: white !important;
+  color: #0F172A !important;
+}
+
+.admin-card select option:checked {
+  background: linear-gradient(135deg, #0A84FF, #5AC8FA) !important;
+  color: white !important;
+}
+
+/* Labels */
+.admin-card label {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.68rem !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: rgba(71,85,105,0.75) !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+/* Placeholders */
+.admin-card input::placeholder,
+.admin-card textarea::placeholder {
+  color: rgba(148,163,184,0.7) !important;
+  font-weight: 380 !important;
+}
+
+
+/* ══════════════════════════════════════
+   🔘 BUTTONS — Gradient Glass CTA
+   ══════════════════════════════════════ */
+
+/* Primary button: + Add Resource */
+.admin-card button:not(.del):not(.toggle) {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  padding: 14px 32px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  /* Living gradient */
+  background: linear-gradient(135deg, #0A84FF 0%, #5AC8FA 50%, #0A84FF 100%) !important;
+  background-size: 200% 200% !important;
+  animation: ultra-btn-gradient 4s ease infinite !important;
+  color: white !important;
+
+  box-shadow:
+    0 6px 20px rgba(10,132,255,0.35),
+    0 2px 6px rgba(10,132,255,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.25) !important;
+
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+@keyframes ultra-btn-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Button shine sweep */
+.admin-card button:not(.del):not(.toggle)::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: -100% !important;
+  width: 100% !important; height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.20),
+    transparent
+  ) !important;
+  animation: ultra-btn-shine 5s ease infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes ultra-btn-shine {
+  0%   { left: -100%; }
+  30%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* Hover: lift + deeper glow */
+.admin-card button:not(.del):not(.toggle):hover {
+  box-shadow:
+    0 8px 28px rgba(10,132,255,0.40),
+    0 4px 10px rgba(10,132,255,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  filter: brightness(1.06) !important;
+}
+
+/* Active: haptic press */
+.admin-card button:not(.del):not(.toggle):active {
+  transform: scale(0.96) !important;
+  filter: brightness(0.95) !important;
+  box-shadow:
+    0 2px 8px rgba(10,132,255,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.15) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Delete button — soft glass red */
+.admin-card button.del {
+  background: rgba(255,55,95,0.06) !important;
+  border: 1px solid rgba(255,55,95,0.12) !important;
+  color: #FF375F !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(8px) !important;
+  font-weight: 520 !important;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+.admin-card button.del:hover {
+  background: rgba(255,55,95,0.12) !important;
+  border-color: rgba(255,55,95,0.25) !important;
+  box-shadow: 0 4px 12px rgba(255,55,95,0.10) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Toggle button — glass toggle */
+.admin-card button.toggle {
+  background: rgba(255,255,255,0.45) !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  color: rgba(71,85,105,0.7) !important;
+  border-radius: 100px !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5) !important;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+.admin-card button.toggle:hover {
+  background: rgba(255,255,255,0.70) !important;
+  transform: translateY(-1px) !important;
+}
+
+.admin-card button.toggle.active {
+  background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(48,213,200,0.12)) !important;
+  color: #059669 !important;
+  border-color: rgba(16,185,129,0.25) !important;
+  font-weight: 600 !important;
+}
+
+
+/* ══════════════════════════════════════
+   📊 ADMIN CARD — Deeper Glass
+   ══════════════════════════════════════ */
+.admin-card {
+  background: rgba(255,255,255,0.42) !important;
+  backdrop-filter: blur(40px) saturate(180%) brightness(105%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(105%) !important;
+  border-radius: 24px !important;
+  border: 0.5px solid rgba(255,255,255,0.60) !important;
+  padding: 32px !important;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.06),
+    0 24px 64px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.70) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Admin card top refraction */
+.admin-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 8% !important; right: 8% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.90), transparent) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+/* Admin card h3 title */
+.admin-card h3 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 680 !important;
+  letter-spacing: -0.02em !important;
+  color: #0F172A !important;
+  margin-bottom: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+
+/* ══════════════════════════════════════
+   📋 FORM ROW — Breathing Space
+   ══════════════════════════════════════ */
+.form-row {
+  gap: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+
+/* ══════════════════════════════════════
+   📊 TABLE — Premium Frosted Grid
+   ══════════════════════════════════════ */
+.admin-card table {
+  background: rgba(255,255,255,0.30) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin-top: 20px !important;
+}
+
+.admin-card th {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif !important;
+  font-size: 0.68rem !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: rgba(71,85,105,0.60) !important;
+  background: rgba(0,0,0,0.02) !important;
+  padding: 13px 16px !important;
+  border-bottom: 0.5px solid rgba(0,0,0,0.06) !important;
+}
+
+.admin-card td {
+  font-size: 0.88rem !important;
+  padding: 13px 16px !important;
+  border-bottom: 0.5px solid rgba(0,0,0,0.03) !important;
+  color: #0F172A !important;
+}
+
+.admin-card tr:hover td {
+  background: rgba(10,132,255,0.035) !important;
+}
+
+.admin-card tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Badge */
+.admin-card .badge {
+  background: linear-gradient(135deg, rgba(10,132,255,0.10), rgba(90,200,250,0.10)) !important;
+  color: #0A84FF !important;
+  border: 0.5px solid rgba(10,132,255,0.12) !important;
+  border-radius: 100px !important;
+  padding: 4px 12px !important;
+  font-size: 0.70rem !important;
+  font-weight: 600 !important;
+}
+
+
+/* ══════════════════════════════════════
+   📱 MOBILE POLISH
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .search-bar {
+    min-width: unset !important;
+    width: 100% !important;
+  }
+
+  .search-bar:focus-within {
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  .filter-section {
+    padding: 12px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .cat-tab,
+  .type-tab {
+    padding: 8px 16px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .cat-tab.active,
+  .type-tab.active {
+    box-shadow: 0 2px 10px rgba(10,132,255,0.25) !important;
+  }
+
+  .admin-card {
+    padding: 22px 18px !important;
+    border-radius: 18px !important;
+  }
+
+  .admin-card button:not(.del):not(.toggle) {
+    width: 100% !important;
+    padding: 16px 24px !important;
+    border-radius: 14px !important;
+  }
+}
+
+
+/* ══════════════════════════════════════
+   ♿ REDUCED MOTION
+   ══════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .page-title,
+  h1.page-title {
+    animation: none !important;
+    background-size: 100% 100% !important;
+  }
+
+  .page-title::before,
+  h1.page-title::before {
+    animation: none !important;
+  }
+
+  .filter-section::before {
+    animation: none !important;
+  }
+
+  .search-bar::after {
+    animation: none !important;
+    display: none !important;
+  }
+
+  .admin-card button:not(.del):not(.toggle) {
+    animation: none !important;
+  }
+
+  .admin-card button:not(.del):not(.toggle)::after {
+    animation: none !important;
+    display: none !important;
+  }
+}

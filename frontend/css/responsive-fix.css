@@ -1,0 +1,556 @@
+/* ═══════════════════════════════════════════════════════════════════
+   🛡️ RESPONSIVE SYSTEM & BUG PREVENTION — responsive-fix.css
+   ═══════════════════════════════════════════════════════════════════
+   
+   ✅ Pure CSS — no business logic
+   ✅ Removable — delete file + <link> tag
+   
+   Bug prevention categories:
+   A. Layout bugs        — overflow, fixed elements, card clipping
+   B. iOS bugs           — 100dvh, input zoom, bounce scroll  
+   C. Android bugs       — keyboard layout push, safe-area
+   D. Notch/island bugs  — env() padding on all sides
+   E. Interaction bugs   — z-index authority, pointer-events, click zones
+   F. Responsive system  — fluid layout, adaptive type, touch UX
+   G. Performance guards — animation timing, will-change, GPU hints
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════
+   A. ROOT STABILITY — prevent globals
+   ═══════════════════════════════════════ */
+
+/* 
+  PREVENT horizontal scroll globally
+  Root cause of most mobile layout bugs 
+*/
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/*
+  FIX: iOS 100vh bug (address bar eats space)
+  Use 100dvh where supported — fallback to 100vh
+*/
+body {
+  height: 100dvh;       /* Dynamic viewport — iOS 15.4+ */
+  min-height: 100vh;    /* Fallback for older browsers */
+}
+
+/* 
+  FIX: iOS elastic/bounce scroll on body (keep for inner containers)
+*/
+body {
+  overscroll-behavior: none;
+}
+
+/* Allow inner scroll areas to still bounce (natural iOS feel) */
+.main, .content, .sidebar {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;  /* Smooth iOS momentum scroll */
+}
+
+
+/* ═══════════════════════════════════════
+   B. SAFE AREA — Notch / Island / Bar
+   ═══════════════════════════════════════ */
+
+/* Bottom nav — always above home indicator */
+.bottom-nav {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left:   max(0px, env(safe-area-inset-left));
+  padding-right:  max(0px, env(safe-area-inset-right));
+}
+
+/* Sidebar on iPad with notch */
+.sidebar {
+  padding-left:  max(14px, calc(env(safe-area-inset-left) + 8px));
+  padding-top:   max(28px, calc(env(safe-area-inset-top) + 12px));
+}
+
+/* Main content area — notch on landscape */
+.main, .content {
+  padding-top:   max(36px, calc(env(safe-area-inset-top) + 16px));
+  padding-left:  max(18px, calc(env(safe-area-inset-left) + 16px));
+  padding-right: max(18px, calc(env(safe-area-inset-right) + 16px));
+}
+
+@media (min-width: 769px) {
+  /* On desktop, reset env() overrides since sidebar covers left */
+  .main, .content {
+    padding-top:  40px;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+  .sidebar {
+    padding-left: 14px;
+    padding-top:  28px;
+  }
+}
+
+
+/* ═══════════════════════════════════════
+   C. Z-INDEX AUTHORITY TABLE
+   Single source of truth — no conflicts
+   ═══════════════════════════════════════ */
+:root {
+  --z-bg:       0;      /* Canvas particles, grid */
+  --z-base:     10;     /* Main content          */
+  --z-sidebar:  50;     /* Desktop sidebar        */
+  --z-float:    60;     /* Floating action buttons */
+  --z-bottomnav:100;    /* Mobile bottom nav      */
+  --z-overlay:  200;    /* Overlays, drawers      */
+  --z-modal:    1000;   /* Dialogs, modals        */
+  --z-toast:    2000;   /* Toasts, alerts         */
+  --z-max:      9999;   /* Emergency top layer    */
+}
+
+#sci-particles    { z-index: var(--z-bg) !important; pointer-events: none !important; }
+.main             { z-index: var(--z-base);     }
+.content          { z-index: var(--z-base);     }
+.sidebar          { z-index: var(--z-sidebar);  }
+.bottom-nav       { z-index: var(--z-bottomnav);}
+.modal-backdrop   { z-index: var(--z-modal);    }
+#toast-container  { z-index: var(--z-toast);    }
+
+/* Ensure canvas never steals clicks */
+canvas {
+  pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════
+   D. INTERACTION BUGS — safe clickability
+   ═══════════════════════════════════════ */
+
+/* 
+  FIX: ::before / ::after never block clicks
+  (common issue with shimmer & ripple overlays)
+*/
+.card::after,
+.card::before,
+.primary-btn::before,
+.nav-item::before,
+.sidebar::after,
+.sidebar::before {
+  pointer-events: none;
+}
+
+/* FIX: animation must not block interaction */
+[class*="animation"],
+[style*="animation"] {
+  pointer-events: auto;  /* explicitly preserve */
+}
+
+/* FIX: transformed elements stay interactive */
+.card:hover,
+.card:active,
+.nav-item:hover,
+button:hover {
+  pointer-events: auto;
+}
+
+/* FIX: hidden views must be fully inert */
+.hidden {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+
+/* ═══════════════════════════════════════
+   E. iOS INPUT BUGS
+   ═══════════════════════════════════════ */
+
+/* 
+  FIX: iOS Zoom on input focus (font-size < 16px triggers zoom)
+  Must be 16px minimum on iOS
+*/
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+  
+  /* But restore visual size via transform for design consistency */
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="password"] {
+    font-size: 16px;
+  }
+}
+
+/* FIX: iOS select arrow */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239CA3AF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* FIX: tap highlight on all interactive elements */
+button, [onclick], .card, .nav-item, .cat-tab, .type-tab, .b-nav-item, .choice-btn {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* FIX: callout menu on long press (tablets) */
+img { -webkit-user-drag: none; user-select: none; }
+
+
+/* ═══════════════════════════════════════
+   F. ADAPTIVE TYPOGRAPHY
+   clamp() — scales between min and max
+   ═══════════════════════════════════════ */
+
+.page-title {
+  font-size: clamp(1.4rem, 3.5vw, 2rem) !important;
+  line-height: 1.25;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-title {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.card-sub {
+  font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+}
+
+/* Prevent type on badges from breaking */
+.type-badge {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Body line height for readability */
+body {
+  line-height: 1.5;
+  word-spacing: 0.01em;
+}
+
+
+/* ═══════════════════════════════════════
+   G. FLUID LAYOUT FIXES
+   ═══════════════════════════════════════ */
+
+/* Prevent images from overflowing */
+img, video { max-width: 100%; height: auto; }
+
+/* Prevent tables from overflowing */
+table { max-width: 100%; }
+
+/* Ensure grid doesn't cause horizontal scroll */
+.grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
+/* Exam paper should not overflow on small screens */
+.exam-paper {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Prevent choice grid from overflowing */
+.choice-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+}
+
+
+/* ═══════════════════════════════════════
+   H. TOUCH TARGET ENFORCEMENT
+   Apple HIG: 44×44pt minimum
+   ═══════════════════════════════════════ */
+
+button,
+.b-nav-item,
+.nav-item {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Cat/type tabs can be smaller on desktop but safe on mobile */
+@media (max-width: 768px) {
+  .cat-tab, .type-tab {
+    min-height: 40px;
+    padding: 10px 16px;
+  }
+
+  .choice-btn {
+    min-height: 52px;   /* easier to tap */
+    padding: 14px;
+  }
+}
+
+/* Increase logo tap area */
+.logo img {
+  cursor: pointer;
+}
+
+
+/* ═══════════════════════════════════════
+   I. RESPONSIVE BREAKPOINTS (mobile-first)
+   ═══════════════════════════════════════ */
+
+/* ── XS: tiny phones (< 380px) ── */
+@media (max-width: 380px) {
+  .main, .content { padding: 14px 12px; }
+  .grid { gap: 10px; }
+
+  .search-bar { width: 100%; }
+
+  .exam-paper { padding: 18px 14px; border-radius: 16px; }
+
+  .primary-btn { padding: 14px 20px; font-size: 0.9rem; }
+
+  .logo { font-size: 1.1rem; }
+}
+
+/* ── SM: standard phones (380–599px) ── */
+@media (max-width: 599px) {
+  .sidebar { display: none; }
+  .bottom-nav { display: flex; }
+
+  .main, .content {
+    padding: 18px 16px;
+    padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom)));
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search-bar {
+    width: 100% !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .choice-grid { grid-template-columns: 1fr; }
+}
+
+/* ── MD: Large phones / portrait tablet (600–900px) ── */
+@media (min-width: 600px) and (max-width: 900px) {
+  .sidebar { display: none; }
+  .bottom-nav { display: flex; }
+
+  .main, .content {
+    padding: 28px 28px;
+    padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom)));
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── LG: Desktop sidebar layout (>900px) ── */
+@media (min-width: 901px) {
+  .sidebar { display: flex; }
+  .bottom-nav { display: none !important; }
+}
+
+/* ── LANDSCAPE on phone ── */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Reduce vertical space usage */
+  .main, .content {
+    padding-top: 14px;
+    padding-bottom: calc(60px + max(8px, env(safe-area-inset-bottom)));
+  }
+
+  .bottom-nav {
+    /* Compact height in landscape */
+    padding-top: 4px;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+  }
+
+  .b-nav-item { gap: 1px; font-size: 0.6rem; }
+  .b-nav-icon { font-size: 1.2rem; }
+
+  .grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Collapse header */
+  .header { margin-bottom: 14px; }
+
+  /* Shrink exam paper in landscape */
+  .exam-paper { padding: 20px 24px; }
+}
+
+/* ── TABLET landscape (>= 1024px) ── */
+@media (min-width: 1024px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
+
+
+/* ═══════════════════════════════════════
+   J. PERFORMANCE GUARDS
+   Mobile CPU/GPU protection
+   ═══════════════════════════════════════ */
+
+/*
+  Only promote composited layers for elements that truly animate
+  Avoids excessive memory on mobile
+*/
+.card,
+.sidebar,
+.modal {
+  will-change: transform;   /* GPU compositing for smooth hover */
+}
+
+/* Auto-remove will-change after hover in CSS */
+.card:not(:hover) {
+  will-change: auto;
+}
+
+/* Limit blur radius on mobile (expensive on GPU) */
+@media (max-width: 768px) {
+  .sidebar,
+  .bottom-nav,
+  .search-bar,
+  .modal,
+  .admin-card,
+  .score-card {
+    /* Reduce to cheaper value */
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
+
+  /* Reduce animation intensity on mobile */
+  .card { animation-duration: 0.35s !important; }
+}
+
+/* Kill heavy animations on low-end devices */
+@media (max-width: 480px) {
+  body::before,
+  body::after {
+    animation: none;
+    display: none; /* Remove background orbs on very small/old phones */
+  }
+
+  .sidebar::after {
+    animation: none;
+  }
+}
+
+/* Prevent scroll jank from paint during scroll */
+.main, .content {
+  contain: layout style;
+}
+
+
+/* ═══════════════════════════════════════
+   K. ANDROID KEYBOARD FIX
+   ═══════════════════════════════════════ */
+
+/*
+  When Android keyboard opens, viewport shrinks.
+  bottom-nav should not fight with keyboard.
+  
+  Strategy: use fixed positioning carefully + 
+  ensure forms scroll above keyboard
+*/
+@supports (height: 100dvh) {
+  body {
+    height: 100dvh;
+  }
+
+  /* When input is focused, shrink bottom padding so form visible */
+  .main:has(input:focus),
+  .content:has(input:focus) {
+    padding-bottom: 20px;
+  }
+}
+
+/* Smooth scroll for inner content areas */
+.main, .content, .sidebar {
+  scroll-behavior: smooth;
+}
+
+
+/* ═══════════════════════════════════════
+   L. OVERFLOW GUARD — last resort
+   Catches any rogue element causing x-scroll
+   ═══════════════════════════════════════ */
+
+/* Utility class for overflow-safe containers */
+.overflow-safe {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Ensure long strings (URLs, student IDs) don't overflow */
+td, .card-title, .card-sub, p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+
+/* ═══════════════════════════════════════
+   M. PREFERS-REDUCED-MOTION (override)
+   ═══════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.08ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  #sci-particles { display: none !important; }
+  
+  body::before, body::after {
+    animation: none !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════
+   N. FOCUS MANAGEMENT — keyboard nav
+   ═══════════════════════════════════════ */
+
+/* Remove focus ring for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #3B8BFF;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Skip nav (accessibility) — hidden by default */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #3B8BFF;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  z-index: var(--z-max);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.skip-to-content:focus {
+  left: 16px;
+}

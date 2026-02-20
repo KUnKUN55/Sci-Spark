@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>จัดการประกาศคะแนน - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive-fix.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg">
+  <style>
+    .content {
+      flex: 1; padding: 40px 50px;
+      overflow-y: auto; overflow-x: hidden;
+      position: relative; z-index: 10;
+      background:
+        radial-gradient(ellipse 60% 60% at 15% 15%, rgba(6, 214, 160, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 85% 85%, rgba(123, 97, 255, 0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 45% at 50% 50%, rgba(255, 107, 157, 0.05) 0%, transparent 50%),
+        #06080F;
+    }
+    .page-header { margin-bottom: 28px; }
+
+    .page-title {
+      font-size: clamp(1.35rem, 3vw, 1.8rem); font-weight: 800; margin: 0;
+      letter-spacing: -0.5px;
+      background: var(--gradient-aurora, linear-gradient(135deg, #06D6A0, #7B61FF, #FF6B9D));
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: gradient-text 6s ease-in-out infinite;
+    }
+
+    @keyframes gradient-text {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    @keyframes card-fade-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes border-flow {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .admin-card {
+      background: #121626;
+      border-radius: 24px; padding: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-aurora);
+      background-size: 200% 100%;
+      animation: border-flow 5s linear infinite;
+      opacity: 0.6;
+    }
+
+    .admin-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+
+    .form-row { display: flex; gap: 18px; margin-bottom: 18px; flex-wrap: wrap; }
+    .form-col { flex: 1; min-width: 200px; }
+
+    label { display: block; margin-bottom: 8px; font-size: 0.72rem; font-weight: 700; color: var(--text-muted, #5A6480); text-transform: uppercase; letter-spacing: 1px; }
+
+    input, select {
+      width: 100%; padding: 13px 16px;
+      background: var(--bg-input, rgba(28,34,58,0.7));
+      border: 1.5px solid var(--border, rgba(255,255,255,0.06));
+      border-radius: 16px; font-family: inherit; font-size: 16px;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      box-sizing: border-box; color: var(--text-main, #E8ECF4);
+      -webkit-appearance: none; appearance: none;
+    }
+
+    input:focus, select:focus {
+      background: var(--bg-elevated, rgba(22,26,46,0.92));
+      border-color: var(--border-focus, rgba(123,97,255,0.5));
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(123,97,255,0.12);
+    }
+
+    input::placeholder { color: var(--text-muted, #5A6480); }
+
+    button {
+      background: var(--gradient-primary, linear-gradient(135deg, #06D6A0, #7B61FF));
+      color: white; border: none; padding: 13px 24px;
+      border-radius: 16px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(123,97,255,0.25);
+      position: relative; overflow: hidden; font-family: inherit;
+      min-height: 44px; -webkit-appearance: none; appearance: none;
+    }
+
+    button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(123,97,255,0.35); }
+    button:active:not(:disabled) { transform: scale(0.97); transition-duration: 0.08s; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none; }
+
+    button.del { background: rgba(255,107,157,0.1); color: #FF6B9D; padding: 8px 14px; font-size: 0.82rem; border-radius: 12px; box-shadow: none; min-height: 36px; border: 1px solid rgba(255,107,157,0.2); }
+    button.del:hover:not(:disabled) { background: rgba(255,107,157,0.18); transform: none; box-shadow: none; }
+
+    button.edit-btn { background: rgba(123,97,255,0.1); color: #9B85FF; padding: 8px 14px; font-size: 0.82rem; border-radius: 12px; box-shadow: none; min-height: 36px; border: 1px solid rgba(123,97,255,0.2); }
+    button.edit-btn:hover:not(:disabled) { background: rgba(123,97,255,0.18); transform: none; box-shadow: none; }
+
+    button.small-btn { background: rgba(255,255,255,0.04); color: var(--text-sub, #8B95AD); padding: 8px 14px; font-size: 0.82rem; border-radius: 12px; box-shadow: none; min-height: 36px; border: 1px solid var(--border, rgba(255,255,255,0.06)); }
+    button.small-btn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: var(--text-main); transform: none; box-shadow: none; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th { text-align: left; padding: 12px 16px; color: var(--text-muted, #5A6480); font-size: 0.72rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.06)); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--divider, rgba(255,255,255,0.04)); font-size: 0.9rem; vertical-align: middle; color: var(--text-main); }
+    tr:hover td { background: rgba(123,97,255,0.04); }
+    tr:last-child td { border-bottom: none; }
+
+    .badge { padding: 4px 12px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; background: rgba(123,97,255,0.12); color: #9B85FF; display: inline-block; white-space: nowrap; }
+
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex; background: rgba(255,255,255,0.04); padding: 5px; border-radius: 16px; gap: 0; margin-bottom: 20px;
+      border: 1px solid var(--border, rgba(255,255,255,0.06));
+    }
+    .mode-toggle button {
+      flex: 1; padding: 10px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600;
+      background: transparent; color: var(--text-sub); box-shadow: none; cursor: pointer; transition: all 0.25s; min-height: 36px;
+    }
+    .mode-toggle button.active { background: rgba(123,97,255,0.15); color: #9B85FF; box-shadow: 0 4px 16px rgba(123,97,255,0.1); border: 1px solid rgba(123,97,255,0.2); }
+    .mode-toggle button:hover:not(.active) { color: var(--text-main); transform: none; box-shadow: none; }
+
+    /* Login Overlay */
+    .login-overlay {
+      position: fixed; inset: 0; background: rgba(6,8,15,0.95);
+      backdrop-filter: blur(30px); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
+    .login-box {
+      background: var(--bg-elevated, rgba(22,26,46,0.92)); padding: 44px 40px; border-radius: 28px;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.6), 0 0 60px rgba(123,97,255,0.08);
+      text-align: center; width: 92%; max-width: 400px;
+      animation: card-fade-in 0.45s cubic-bezier(0.22,1,0.36,1) both;
+      border: 1px solid var(--border-card, rgba(255,255,255,0.08));
+      position: relative; overflow: hidden;
+    }
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 2px;
+      background: var(--gradient-aurora);
+      border-radius: 0 0 4px 4px;
+    }
+    .login-box h2 { font-size: clamp(1.3rem, 4vw, 1.6rem); font-weight: 800; margin: 0 0 8px; color: var(--text-main); }
+    .login-box p { color: var(--text-sub, #8B95AD); margin: 0 0 24px; font-size: 0.875rem; }
+    .login-box input { text-align: center; font-size: 1.1rem; letter-spacing: 3px; font-weight: 700; margin-bottom: 16px; }
+    .login-error { color: #FF6B9D; font-size: 0.82rem; font-weight: 700; margin-top: 10px; display: none; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat-card {
+      flex: 1; min-width: 120px;
+      background: #121626; border-radius: 20px; padding: 22px;
+      border: 1px solid rgba(255,255,255,0.08); text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 2px;
+      background: var(--gradient-primary);
+      border-radius: 0 0 4px 4px;
+      opacity: 0.6;
+    }
+    .stat-card .stat-value {
+      font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800;
+      background: var(--gradient-aurora);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-card .stat-label { font-size: 0.72rem; color: var(--text-sub, #8B95AD); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+
+    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+    .action-bar h3 { margin: 0; font-weight: 700; font-size: 1.05rem; color: var(--text-main); }
+
+    /* Dynamic Score Items */
+    .score-item-row {
+      display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
+      animation: card-fade-in 0.3s cubic-bezier(0.22,1,0.36,1) both;
+      flex-wrap: wrap;
+    }
+    .score-item-row input.label-input { flex: 2; min-width: 120px; }
+    .score-item-row input.score-input { flex: 1; min-width: 80px; }
+    .score-item-row button.remove-item {
+      background: rgba(255,107,157,0.1); color: #FF6B9D; padding: 8px 12px;
+      border-radius: 12px; box-shadow: none; font-size: 1rem; line-height: 1;
+      min-width: 40px; min-height: 40px; border: 1px solid rgba(255,107,157,0.15);
+    }
+    .score-item-row button.remove-item:hover:not(:disabled) { background: rgba(255,107,157,0.18); transform: none; box-shadow: none; }
+
+    #items-container { margin-bottom: 14px; }
+
+    .add-item-btn {
+      background: rgba(6,214,160,0.1); color: #06D6A0; box-shadow: none;
+      padding: 10px 20px; font-size: 0.875rem; border-radius: 14px;
+      margin-bottom: 18px; display: block;
+      border: 1px solid rgba(6,214,160,0.25);
+    }
+    .add-item-btn:hover:not(:disabled) { background: rgba(6,214,160,0.18); transform: none; box-shadow: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+      padding: 14px 28px; border-radius: 100px; font-weight: 700; font-size: 0.9rem;
+      z-index: 10000; opacity: 0; transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+      font-family: inherit; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      pointer-events: none; backdrop-filter: blur(20px);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: rgba(6,214,160,0.2); color: #06D6A0; border: 1px solid rgba(6,214,160,0.3); }
+    .toast.error   { background: rgba(255,107,157,0.2); color: #FF6B9D; border: 1px solid rgba(255,107,157,0.3); }
+
+    /* Debug log */
+    #debug-log {
+      background: rgba(10,14,26,0.9); color: #00C2FF; padding: 16px; border-radius: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem;
+      max-height: 200px; overflow-y: auto; white-space: pre-wrap;
+      margin-top: 18px; display: none;
+      border: 1px solid var(--border, rgba(255,255,255,0.06));
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 22px 18px; }
+      .form-row { flex-direction: column; gap: 12px; }
+      .form-col { min-width: 100%; }
+      .stats-row { flex-direction: column; }
+      .action-bar { flex-direction: column; align-items: stretch; }
+      table { font-size: 0.82rem; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      th, td { padding: 10px 12px; }
+      .score-item-row { flex-wrap: wrap; }
+      .score-item-row input.score-input { min-width: 80px; }
+    }
+
+    @media (max-width: 400px) {
+      .content { padding: 16px 12px; }
+      .login-box { padding: 32px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Overlay -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-box">
+      <div style="font-size:3rem; margin-bottom:14px;">🔐</div>
+      <h2>Admin Access</h2>
+      <p>กรอกรหัสผ่านเพื่อเข้าสู่ระบบ</p>
+      <input type="password" id="login-password" placeholder="••••••"
+             onkeydown="if(event.key==='Enter') doLogin()">
+      <div><button onclick="doLogin()" style="width:100%;">เข้าสู่ระบบ</button></div>
+      <div id="login-error" class="login-error">❌ รหัสผ่านไม่ถูกต้อง</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo"><img src="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg" alt="Sci-Spark" style="width:40px;height:40px;border-radius:16px;"> Sci-Spark</div>
+    <div class="nav-item" onclick="location.href='admin.html'">📂 Documents</div>
+    <div class="nav-item" onclick="location.href='admin.html'">📝 Examinations</div>
+    <div class="nav-item" onclick="location.href='admin.html'">📊 Gradebook</div>
+    <div class="nav-item active">📢 Score Announce</div>
+  </div>
+
+  <div class="content" id="main-content" style="display:none;">
+
+    <div class="page-header"><h1 class="page-title">📢 จัดการประกาศคะแนน</h1></div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">จำนวนนักเรียน</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-avg">-</div>
+        <div class="stat-label">คะแนนเฉลี่ย</div>
+      </div>
+    </div>
+
+    <!-- Add / Edit Score Form -->
+    <div class="admin-card">
+      <h3 style="margin:0 0 22px; font-weight:800; color:var(--text-main);">➕ เพิ่ม / แก้ไขคะแนน</h3>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>รหัสนักเรียน (Student ID)</label>
+          <input id="s-id" placeholder="เช่น T24703">
+        </div>
+      </div>
+
+      <label style="margin-bottom: 12px;">รูปแบบการกรอกคะแนน</label>
+      <div class="mode-toggle">
+        <button class="active" id="mode-breakdown-btn" onclick="setMode('breakdown')">📊 แยกส่วน</button>
+        <button id="mode-total-btn" onclick="setMode('total')">📝 รวมอย่างเดียว</button>
+      </div>
+
+      <!-- Dynamic Breakdown Fields -->
+      <div id="breakdown-section">
+        <label>หัวข้อย่อย <span style="font-weight:400; text-transform:none; font-size:0.8rem;">(กรอกชื่อหัวข้อเองได้)</span></label>
+        <div id="items-container"></div>
+        <button class="add-item-btn" type="button" onclick="addItem()">＋ เพิ่มหัวข้อ</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>🏆 คะแนนรวม (Total)</label>
+          <input type="number" id="s-total" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <button id="save-btn" onclick="saveScore()">💾 บันทึกคะแนน</button>
+
+      <!-- Debug toggle -->
+      <button class="small-btn" style="margin-left:10px;" onclick="toggleDebug()">🐛 Debug</button>
+      <div id="debug-log"></div>
+    </div>
+
+    <!-- Score List -->
+    <div class="admin-card">
+      <div class="action-bar">
+        <h3>📋 รายการคะแนนทั้งหมด</h3>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="small-btn" onclick="loadScores()">🔄 รีเฟรช</button>
+          <button class="del" onclick="deleteAll()">🗑️ ลบทั้งหมด</button>
+        </div>
+      </div>
+      <div id="score-list">
+        <div style="text-align:center; padding:30px; color:var(--text-sub);">กำลังโหลด...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/cache-layer.js"></script>
+  <script src="js/request-queue.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // ========================================
+    // STATE
+    // ========================================
+    var ADMIN_PASSWORD = 'admin1234';
+    var currentMode = 'breakdown';
+    var debugMode = false;
+
+    var defaultItems = [
+      { label: 'คะแนนงาน (Homework)', score: '' },
+      { label: 'สอบย่อย (Quiz)', score: '' },
+      { label: 'กลางภาค (Midterm)', score: '' },
+      { label: 'ปลายภาค (Final)', score: '' }
+    ];
+
+    // ========================================
+    // DEBUG & TOAST
+    // ========================================
+    function log(msg) {
+      console.log('[ScoreAdmin]', msg);
+      if (debugMode) {
+        var el = document.getElementById('debug-log');
+        el.textContent += new Date().toLocaleTimeString() + ' | ' + msg + '\n';
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+
+    function toggleDebug() {
+      debugMode = !debugMode;
+      var el = document.getElementById('debug-log');
+      el.style.display = debugMode ? 'block' : 'none';
+    }
+
+    function showToast(msg, type) {
+      // Use new Toast system if available
+      if (window.Toast) {
+        if (type === 'error') Toast.error(msg);
+        else if (type === 'success') Toast.success(msg);
+        else Toast.warning(msg); // Default to warning/info
+        return;
+      }
+      
+      // Fallback
+      alert(msg);
+    }
+
+    // ========================================
+    // AUTH
+    // ========================================
+    function doLogin() {
+      var pw = document.getElementById('login-password').value;
+      if (pw === ADMIN_PASSWORD) {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        initForm();
+        loadScores();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-password').focus();
+        setTimeout(function() {
+          document.getElementById('login-error').style.display = 'none';
+        }, 2500);
+      }
+    }
+
+    // ========================================
+    // FORM: Dynamic Score Items
+    // ========================================
+    function initForm() {
+      var container = document.getElementById('items-container');
+      container.innerHTML = '';
+      for (var i = 0; i < defaultItems.length; i++) {
+        addItem(defaultItems[i].label, defaultItems[i].score);
+      }
+      setMode('breakdown');
+    }
+
+    function addItem(labelVal, scoreVal) {
+      var container = document.getElementById('items-container');
+      var row = document.createElement('div');
+      row.className = 'score-item-row';
+
+      var labelInput = document.createElement('input');
+      labelInput.className = 'label-input';
+      labelInput.type = 'text';
+      labelInput.placeholder = 'ชื่อหัวข้อ เช่น กลางภาค';
+      labelInput.value = labelVal || '';
+
+      var scoreInput = document.createElement('input');
+      scoreInput.className = 'score-input';
+      scoreInput.type = 'number';
+      scoreInput.placeholder = 'คะแนน';
+      scoreInput.min = '0';
+      scoreInput.value = (scoreVal !== undefined && scoreVal !== '') ? scoreVal : '';
+      scoreInput.addEventListener('input', calcTotal);
+
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'remove-item';
+      removeBtn.textContent = '✕';
+      removeBtn.title = 'ลบ';
+      removeBtn.addEventListener('click', function() {
+        row.remove();
+        calcTotal();
+      });
+
+      row.appendChild(labelInput);
+      row.appendChild(scoreInput);
+      row.appendChild(removeBtn);
+      container.appendChild(row);
+      calcTotal();
+    }
+
+    function getItems() {
+      var rows = document.querySelectorAll('.score-item-row');
+      var items = [];
+      for (var i = 0; i < rows.length; i++) {
+        var label = rows[i].querySelector('.label-input').value.trim();
+        var score = Number(rows[i].querySelector('.score-input').value) || 0;
+        if (label) {
+          items.push({ label: label, score: score });
+        }
+      }
+      return items;
+    }
+
+    // ========================================
+    // MODE TOGGLE
+    // ========================================
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-breakdown-btn').className = mode === 'breakdown' ? 'active' : '';
+      document.getElementById('mode-total-btn').className = mode === 'total' ? 'active' : '';
+
+      var section = document.getElementById('breakdown-section');
+      var totalInput = document.getElementById('s-total');
+
+      if (mode === 'breakdown') {
+        section.style.display = 'block';
+        totalInput.readOnly = true;
+        totalInput.style.background = 'rgba(28,34,58,0.4)';
+        calcTotal();
+      } else {
+        section.style.display = 'none';
+        totalInput.readOnly = false;
+        totalInput.style.background = '';
+      }
+    }
+
+    function calcTotal() {
+      if (currentMode !== 'breakdown') return;
+      var items = getItems();
+      var sum = 0;
+      for (var i = 0; i < items.length; i++) sum += items[i].score;
+      document.getElementById('s-total').value = sum;
+    }
+
+    // ========================================
+    // API (Using api.js)
+    // ========================================
+    // apiGet and apiPost are now provided by js/api.js
+
+    // ========================================
+    // SAVE SCORE
+    // ========================================
+    async function saveScore() {
+      var studentId = document.getElementById('s-id').value.trim();
+      if (!studentId) {
+        showToast('⚠️ กรุณากรอกรหัสนักเรียน', 'error');
+        document.getElementById('s-id').focus();
+        return;
+      }
+
+      var items = (currentMode === 'breakdown') ? getItems() : [];
+      var total = Number(document.getElementById('s-total').value) || 0;
+
+      if (currentMode === 'breakdown' && items.length === 0) {
+        showToast('⚠️ กรุณาเพิ่มหัวข้อคะแนนอย่างน้อย 1 รายการ', 'error');
+        return;
+      }
+
+      var btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ กำลังบันทึก...';
+
+      try {
+        log('Saving score for: ' + studentId);
+        // Use apiPost for saving (enables offline queue)
+        var result = await apiPost('saveScore', {
+          studentId: studentId,
+          mode: currentMode,
+          items: items, // apiPost stringifies body, but backend expects items dict?
+                        // Wait, api.js sends JSON body. Backend expects {action, studentId, items...}
+                        // Backend: var items = payload.items || [];
+                        // So I can pass object directly.
+          total: total
+        });
+        log('Save result: ' + JSON.stringify(result));
+
+        if (result && result.success) {
+          showToast('✅ บันทึกคะแนน ' + studentId + ' สำเร็จ!', 'success');
+          clearForm();
+          loadScores();
+        } else {
+          var errMsg = (result && result.error) ? result.error : 'Unknown error';
+          showToast('❌ ' + errMsg, 'error');
+          log('Save failed: ' + errMsg);
+        }
+      } catch (error) {
+        showToast('❌ ' + error.message, 'error');
+        log('Save error: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 บันทึกคะแนน';
+      }
+    }
+
+    function clearForm() {
+      document.getElementById('s-id').value = '';
+      document.getElementById('s-total').value = '';
+      initForm();
+    }
+
+    // ========================================
+    // LOAD SCORES
+    // ========================================
+    async function loadScores() {
+      log('Loading all scores...');
+      try {
+        var result = await apiGet('getAllScores');
+        log('Load result: ' + JSON.stringify(result).substring(0, 500));
+
+        if (!result || !result.success) {
+          var errMsg = (result && result.error) ? result.error : 'Failed to load';
+          throw new Error(errMsg);
+        }
+
+        var scores = result.data || [];
+        updateStats(scores);
+
+        if (scores.length === 0) {
+          document.getElementById('score-list').innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-sub);">📭 ยังไม่มีข้อมูลคะแนน</div>';
+          return;
+        }
+
+        var html = '<table><thead><tr>' +
+          '<th>รหัส</th>' +
+          '<th>รูปแบบ</th>' +
+          '<th>รายละเอียด</th>' +
+          '<th>รวม</th>' +
+          '<th>จัดการ</th>' +
+          '</tr></thead><tbody>';
+
+        for (var i = 0; i < scores.length; i++) {
+          var s = scores[i];
+          var modeLabel = s.mode === 'breakdown'
+            ? '<span class="badge" style="background:rgba(6,214,160,0.12);color:#06D6A0;">แยกส่วน</span>'
+            : '<span class="badge" style="background:rgba(123,97,255,0.12);color:#9B85FF;">รวม</span>';
+
+          var detail = '-';
+          if (s.mode === 'breakdown' && s.items && s.items.length > 0) {
+            var parts = [];
+            for (var j = 0; j < s.items.length; j++) {
+              parts.push(escapeHtml(s.items[j].label) + ':' + escapeHtml(String(s.items[j].score)));
+            }
+            detail = parts.join(' | ');
+          }
+
+          var safeId = escapeHtml(s.studentId);
+          html += '<tr>' +
+            '<td style="font-weight:700;">' + safeId + '</td>' +
+            '<td>' + modeLabel + '</td>' +
+            '<td style="font-size:0.85rem; color:var(--text-sub);">' + detail + '</td>' +
+            '<td><span class="badge" style="background:rgba(255,217,61,0.12);color:#FFD93D;font-size:0.95rem;font-weight:800;">' + escapeHtml(String(s.total)) + '</span></td>' +
+            '<td style="white-space:nowrap;">' +
+              '<button class="edit-btn" data-id="' + safeId + '">✏️</button> ' +
+              '<button class="del" data-id="' + safeId + '">🗑️</button>' +
+            '</td>' +
+          '</tr>';
+        }
+
+        html += '</tbody></table>';
+        document.getElementById('score-list').innerHTML = html;
+
+        // Attach event listeners (no inline onclick)
+        var editBtns = document.querySelectorAll('.edit-btn[data-id]');
+        for (var k = 0; k < editBtns.length; k++) {
+          editBtns[k].addEventListener('click', (function(id) {
+            return function() { editScore(id); };
+          })(editBtns[k].getAttribute('data-id')));
+        }
+
+        var delBtns = document.querySelectorAll('.del[data-id]');
+        for (var m = 0; m < delBtns.length; m++) {
+          delBtns[m].addEventListener('click', (function(id) {
+            return function() { deleteScore(id); };
+          })(delBtns[m].getAttribute('data-id')));
+        }
+
+      } catch (error) {
+        document.getElementById('score-list').innerHTML = '<div style="text-align:center; padding:20px; color:#FF6B9D;">⚠️ ' + escapeHtml(error.message) + '</div>';
+        log('Load error: ' + error.message);
+      }
+    }
+
+    function updateStats(scores) {
+      document.getElementById('stat-total').textContent = scores.length;
+      if (scores.length > 0) {
+        var sum = 0;
+        for (var i = 0; i < scores.length; i++) sum += (Number(scores[i].total) || 0);
+        document.getElementById('stat-avg').textContent = (sum / scores.length).toFixed(1);
+      } else {
+        document.getElementById('stat-avg').textContent = '-';
+      }
+    }
+
+    // ========================================
+    // EDIT SCORE (populate form)
+    // ========================================
+    async function editScore(studentId) {
+      log('Editing: ' + studentId);
+      try {
+        var result = await apiGet('getStudentScore', { studentId: studentId });
+        if (!result || !result.success || !result.found) {
+          showToast('⚠️ ไม่พบข้อมูล', 'error');
+          return;
+        }
+
+        var s = result.data;
+        document.getElementById('s-id').value = s.studentId;
+        document.getElementById('items-container').innerHTML = '';
+
+        if (s.mode === 'breakdown') {
+          setMode('breakdown');
+          if (s.items && s.items.length > 0) {
+            for (var i = 0; i < s.items.length; i++) {
+              addItem(s.items[i].label, s.items[i].score);
+            }
+          }
+          document.getElementById('s-total').value = s.total;
+        } else {
+          setMode('total');
+          document.getElementById('s-total').value = s.total;
+        }
+
+        document.querySelector('.content').scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('📝 แก้ไขรหัส ' + studentId, 'success');
+
+      } catch (error) {
+        showToast('❌ ' + error.message, 'error');
+        log('Edit error: ' + error.message);
+      }
+    }
+
+    // ========================================
+    // DELETE
+    // ========================================
+    async function deleteScore(studentId) {
+      if (!confirm('ลบคะแนนของ "' + studentId + '" ?')) return;
+
+      try {
+        // Use apiPost for delete
+        var result = await apiPost('deleteScore', { studentId: studentId });
+        
+        if (result && (result.success || result.queued)) {
+          showToast('✅ ลบ ' + studentId + ' สำเร็จ', 'success');
+          loadScores();
+        } else {
+          throw new Error((result && result.error) || 'Delete failed');
+        }
+      } catch (error) {
+        showToast('❌ ' + error.message, 'error');
+      }
+    }
+
+    async function deleteAll() {
+      if (!confirm('⚠️ ลบคะแนนทั้งหมด? การกระทำนี้ย้อนกลับไม่ได้!')) return;
+      if (!confirm('🔴 ยืนยันอีกครั้ง — ลบข้อมูลคะแนนทั้งหมดจริงๆ ?')) return;
+
+      try {
+        var result = await apiPost('deleteAllScores', {});
+        
+        if (result && (result.success || result.queued)) {
+          showToast('✅ ลบข้อมูลทั้งหมดแล้ว', 'success');
+          loadScores();
+        } else {
+          throw new Error((result && result.error) || 'Delete all failed');
+        }
+      } catch (error) {
+        showToast('❌ ' + error.message, 'error');
+      }
+    }
+  </script>
+  <script src="js/ambient.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('[SW] Registered:', reg.scope); })
+          .catch(function(err) { console.warn('[SW] Registration failed:', err); });
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Sci-Spark</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/science-decorations.css">
+  <link rel="stylesheet" href="css/responsive-fix.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg">
+</head>
+<body>
+
+  <!-- Desktop Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg" alt="Sci-Spark" style="width:40px;height:40px;border-radius:16px;"> Sci-Spark
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-label">Menu</div>
+      <div class="nav-item active" onclick="go('home')">
+        <span>🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="go('materials')">
+        <span>📂</span> Documents
+      </div>
+      <div class="nav-item" onclick="go('exam')">
+        <span>📝</span> Exams
+      </div>
+      <div class="nav-item" onclick="location.href='scores.html'">
+        <span>📊</span> Scores
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    
+    <!-- Header -->
+    <div class="header">
+      <h1 id="page-header" class="page-title">Dashboard</h1>
+      <div class="search-bar">
+         <span>🔍</span>
+         <input type="text" id="search-input" class="search-input" placeholder="Search title, subject..." oninput="handleSearch(this.value)">
+      </div>
+    </div>
+
+    <!-- Home -->
+    <div id="view-home">
+      <div class="grid">
+        <!-- Static Nav Cards -->
+        <div class="card" onclick="go('exam')">
+          <div class="card-meta">
+            <div class="icon-box" style="background:rgba(255,217,61,0.12); color:#FFD93D;">✏️</div>
+          </div>
+          <div>
+            <div class="card-title">Take an Exam</div>
+            <div class="card-sub">Test your skills</div>
+          </div>
+        </div>
+        
+        <div class="card" onclick="go('materials')">
+          <div class="card-meta">
+            <div class="icon-box" style="background:rgba(123,97,255,0.12); color:#7B61FF;">📚</div>
+          </div>
+          <div>
+            <div class="card-title">Library</div>
+            <div class="card-sub">Notes & Videos</div>
+          </div>
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, rgba(6,214,160,0.2), rgba(123,97,255,0.25)); border:1px solid rgba(6,214,160,0.2);">
+          <div class="card-meta">
+             <div class="icon-box" style="background:rgba(255,255,255,0.1); color:#06D6A0;">🔥</div>
+          </div>
+          <div>
+             <div class="card-title">Your Progress</div>
+             <div class="card-sub" style="color:var(--text-sub);">Keep it up!</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Materials List -->
+    <div id="view-materials" class="hidden">
+      
+      <div class="filter-section">
+        <!-- Subject Filters -->
+        <div class="cat-tabs">
+          <div class="cat-tab active" onclick="setSubject('All')">All Subjects</div>
+          <div class="cat-tab" onclick="setSubject('Mathematics')">Mathematics</div>
+          <div class="cat-tab" onclick="setSubject('Physics')">Physics</div>
+          <div class="cat-tab" onclick="setSubject('Chemistry')">Chemistry</div>
+          <div class="cat-tab" onclick="setSubject('Biology')">Biology</div>
+          <div class="cat-tab" onclick="setSubject('Astronomy')">Astronomy</div>
+          <div class="cat-tab" onclick="setSubject('Earth & Space')">Earth & Space</div>
+        </div>
+        
+        <!-- Type Filters -->
+        <div class="type-tabs" style="margin-top:12px;">
+          <div class="type-tab active" onclick="setType('All')">All</div>
+          <div class="type-tab" onclick="setType('Sheet')">Sheets</div>
+          <div class="type-tab" onclick="setType('Note')">Notes</div>
+          <div class="type-tab" onclick="setType('Video')">Videos</div>
+        </div>
+      </div>
+
+      <div id="mat-grid" class="grid">Loading...</div>
+    </div>
+
+    <!-- Exam List -->
+    <div id="view-exam" class="hidden">
+      <div id="exam-grid" class="grid">Loading...</div>
+    </div>
+
+    <!-- Paper View -->
+    <div id="view-paper" class="hidden">
+      <button onclick="go('exam')" style="background:none; border:none; cursor:pointer; color:var(--text-sub); margin-bottom:20px; padding:0; font-weight:600; font-size:0.9rem;">← Back to Exams</button>
+      
+      <div class="exam-paper">
+        <div style="text-align:center; margin-bottom:40px;">
+          <div id="paper-icon" style="font-size:3rem; margin-bottom:10px;">🧬</div>
+          <h1 id="paper-title" style="margin:0; background:var(--gradient-aurora); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Biology Final</h1>
+          <p id="paper-cat" style="color:var(--text-sub); margin-top:8px;">Science</p>
+        </div>
+
+        <div style="margin-bottom:40px;">
+          <label class="q-num">Student Name</label>
+          <input id="std-name" class="input-line" placeholder="Enter your full name">
+        </div>
+
+        <div id="paper-mc"></div>
+        <div id="paper-written"></div>
+        
+        <button class="primary-btn" onclick="submitExamHandler()">Submit Answers</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <div class="bottom-nav">
+     <button class="b-nav-item active" onclick="go('home')">
+       <span class="b-nav-icon">🏠</span> 
+       <span>Home</span>
+     </button>
+     <button class="b-nav-item" onclick="go('materials')">
+       <span class="b-nav-icon">📂</span> 
+       <span>Docs</span>
+     </button>
+     <button class="b-nav-item" onclick="go('exam')">
+       <span class="b-nav-icon">📝</span> 
+       <span>Exams</span>
+     </button>
+     <button class="b-nav-item" onclick="location.href='scores.html'">
+       <span class="b-nav-icon">📊</span> 
+       <span>Scores</span>
+     </button>
+  </div>
+
+  <!-- Modal -->
+  <div id="res-modal" class="modal-backdrop">
+    <div class="modal">
+      <div style="font-size:4rem; margin-bottom:10px;">🎉</div>
+      <h2 style="font-weight:800; margin:0 0 10px; color:var(--text-main);">Awesome!</h2>
+      <p style="color:var(--text-sub); margin-bottom:20px;">You scored <span id="res-score" style="color:var(--aurora-1); font-weight:700;"></span></p>
+      <button onclick="closeModal()" class="primary-btn">Finish</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/cache-layer.js"></script>
+  <script src="js/request-queue.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/student.js"></script>
+  <script src="js/science-effects.js"></script>
+
+  <script>
+    // Register Service Worker for offline support & caching
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('[SW] Registered:', reg.scope); })
+          .catch(function(err) { console.warn('[SW] Registration failed:', err); });
+      });
+    }
+  </script>
+</body>
+</html>

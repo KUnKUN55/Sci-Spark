@@ -1,0 +1,417 @@
+/* ═══════════════════════════════════════════════════════════════════
+   🍎🔬 SCIENCE PREMIUM DECORATIVE LAYER — v4.0
+   ═══════════════════════════════════════════════════════════════════
+   
+   ✅ Pure decoration — no business logic
+   ✅ Removable — delete file + <link> tag
+   ✅ Apple Science: Clean > Flashy, Precise > Colorful
+   
+   Systems:
+   1. Scientific Detail — Lab grid accents, technical dividers
+   2. Motion System — Refined Apple easing, subtle reveals
+   3. Material & Depth — Light reflections, elevation layers
+   4. Feedback & State — Focus rings, active states, shimmer
+   5. Visual Branding — Logo, section identity  
+   6. Accessibility — Reduce motion, contrast, focus
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════
+   PARTICLE CANVAS CONTAINER
+   ═══════════════════════════════════════ */
+#sci-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+
+/* ═══════════════════════════════════════
+   1. SCIENTIFIC DETAIL LAYER
+   Technical drawing aesthetic
+   ═══════════════════════════════════════ */
+
+/* Section divider — technical line */
+.filter-section {
+  position: relative;
+}
+
+.filter-section::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 16px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59,139,255,0.15) 20%,
+    rgba(0,192,232,0.2) 50%,
+    rgba(59,139,255,0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* Node dot at start of section divider */
+.filter-section::before {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.3;
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  box-shadow: 0 0 0 2px rgba(59,139,255,0.1);
+}
+
+/* Corner accent on exam paper */
+.exam-paper::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 60px; height: 60px;
+  border-top: 2px solid rgba(59,139,255,0.12);
+  border-left: 2px solid rgba(59,139,255,0.12);
+  border-radius: var(--radius-xl) 0 0 0;
+  pointer-events: none;
+}
+
+.exam-paper::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 40px; height: 40px;
+  border-bottom: 2px solid rgba(0,192,232,0.1);
+  border-right: 2px solid rgba(0,192,232,0.1);
+  border-radius: 0 0 var(--radius-xl) 0;
+  pointer-events: none;
+}
+
+/* Grid row hover — subtle highlight */
+tr:hover td {
+  background: rgba(59,139,255,0.02) !important;
+}
+
+
+/* ═══════════════════════════════════════
+   2. MOTION SYSTEM
+   Apple easing, no jarring movement
+   ═══════════════════════════════════════ */
+
+/* Scroll-reveal entrance (JS triggers .revealed) */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-animate].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-animate][data-delay="1"] { transition-delay: 0.08s; }
+[data-animate][data-delay="2"] { transition-delay: 0.16s; }
+[data-animate][data-delay="3"] { transition-delay: 0.24s; }
+[data-animate][data-delay="4"] { transition-delay: 0.32s; }
+
+/* Section transitions */
+.main > div:not(.hidden) {
+  animation: section-reveal 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes section-reveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon hover — subtle lift, no spin */
+.icon-box {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s ease;
+}
+
+/* Nav item micro interaction */
+.nav-item:active {
+  transform: scale(0.96);
+  transition-duration: 0.08s;
+}
+
+/* Tab press feedback */
+.cat-tab:active, .type-tab:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s;
+}
+
+/* Bottom nav touch feedback */
+.b-nav-item:active {
+  transform: scale(0.88);
+  transition-duration: 0.08s;
+}
+
+/* Page title entrance */
+.page-title {
+  animation: title-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes title-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ═══════════════════════════════════════
+   3. MATERIAL & DEPTH SYSTEM
+   Layered glass + light reflections
+   ═══════════════════════════════════════ */
+
+/* Card glass reflection */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.22) 0%,
+    rgba(255,255,255,0) 100%
+  );
+  pointer-events: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  z-index: 0;
+}
+
+/* Admin/score card elevation micro-shadow */
+.admin-card,
+.score-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle inner highlight on glass cards */
+.admin-card::before,
+.score-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Elevated card depth for stat cards */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════
+   4. FEEDBACK & STATE SYSTEM
+   iOS-precision interactions
+   ═══════════════════════════════════════ */
+
+/* Universal input/select focus — iOS glow */
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow:
+    0 0 0 3px rgba(59,139,255,0.14),
+    0 1px 4px rgba(0,0,0,0.06) !important;
+  border-color: rgba(59,139,255,0.45) !important;
+}
+
+/* Shimmer loader placeholder */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    #EEF1F7 25%,
+    #E8EDF5 37%,
+    #EEF1F7 63%
+  ) !important;
+  background-size: 400% 100% !important;
+  animation: shimmer 1.6s ease infinite !important;
+  color: transparent !important;
+  border-radius: 10px;
+  user-select: none;
+}
+
+/* Success highlight */
+@keyframes success-flash {
+  0%   { background: rgba(16,185,129,0.12); }
+  100% { background: transparent; }
+}
+
+.highlight-success {
+  animation: success-flash 1.8s ease-out forwards;
+  border-radius: var(--radius-sm);
+}
+
+/* Info pulse border */
+@keyframes info-pulse {
+  0%, 100% { border-color: rgba(59,139,255,0.15); }
+  50%       { border-color: rgba(59,139,255,0.4); }
+}
+
+.highlight-info {
+  animation: info-pulse 2s ease-in-out infinite;
+}
+
+/* Active nav indicator pulse */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59,139,255,0.4); transform: translateY(-50%) scale(1); }
+  50%       { box-shadow: 0 0 0 4px rgba(59,139,255,0.1); transform: translateY(-50%) scale(1.2); }
+}
+
+.nav-item.active::after {
+  animation: dot-pulse 2.5s ease-in-out infinite;
+}
+
+
+/* ═══════════════════════════════════════
+   5. VISUAL BRANDING SYSTEM
+   Subtle identity, not shouty
+   ═══════════════════════════════════════ */
+
+/* Logo gentle float */
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-2px); }
+}
+
+.logo img {
+  animation: logo-float 5s ease-in-out infinite;
+}
+
+/* Sidebar brand color accent line — refined */
+.sidebar::after {
+  animation: brand-line-pulse 6s ease-in-out infinite;
+}
+
+@keyframes brand-line-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* Nav group section marker */
+.nav-label {
+  position: relative;
+  padding-left: 18px;
+}
+
+.nav-label::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.35;
+}
+
+/* Section title consistent identity */
+.page-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 0.85em;
+  background: linear-gradient(180deg, var(--accent), var(--cyan));
+  border-radius: 2px;
+  margin-right: 10px;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+
+/* ═══════════════════════════════════════
+   6. ACCESSIBILITY
+   ═══════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.05ms !important;
+  }
+  
+  #sci-particles { display: none; }
+  .logo img { animation: none; }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --bg-card: #FFFFFF;
+    --bg-sidebar: #FFFFFF;
+    --border: rgba(0,0,0,0.18);
+    --text-sub: #444;
+    --text-muted: #666;
+  }
+
+  .card {
+    border: 1.5px solid rgba(0,0,0,0.15);
+    box-shadow: none;
+  }
+
+  .nav-item.active {
+    border: 2px solid var(--accent);
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+::selection {
+  background: rgba(59,139,255,0.15);
+  color: var(--text-main);
+}
+
+
+/* ═══════════════════════════════════════
+   MOBILE OVERRIDES
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .main::before {
+    background-size: 32px 32px;
+  }
+
+  .page-title::before {
+    display: none;
+  }
+
+  .nav-item.active::after {
+    display: none;
+  }
+
+  #sci-particles {
+    opacity: 0.3;
+  }
+
+  .filter-section::before {
+    display: none;
+  }
+}

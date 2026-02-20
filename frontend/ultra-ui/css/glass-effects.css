@@ -1,0 +1,295 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   💎 GLASS-EFFECTS.CSS — Extreme Glassmorphism System
+   ═══════════════════════════════════════════════════════════════════════
+   Deep glass materials, translucent glow borders, refraction highlights,
+   3-layer shadow depth, and living glass surfaces.
+   ✅ Pure CSS — zero logic
+   ✅ Removable: delete file + <link>
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════════
+   🃏 CARDS — Ultimate Glass Panels
+   ══════════════════════════════════════ */
+.card {
+  /* Deep glass material */
+  background: rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(40px) saturate(180%) brightness(105%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(105%) !important;
+
+  /* Soft rounded shape */
+  border-radius: 22px !important;
+
+  /* Translucent luminous border */
+  border: 0.5px solid rgba(255, 255, 255, 0.60) !important;
+
+  /* 3-layer diffuse shadow */
+  box-shadow:
+    /* Layer 1: Contact shadow (tight) */
+    0 2px 4px rgba(0,0,0,0.04),
+    /* Layer 2: Medium depth */
+    0 8px 24px rgba(0,0,0,0.06),
+    /* Layer 3: Ambient glow */
+    0 24px 64px rgba(0,0,0,0.05),
+    /* Inner highlight — top edge refraction */
+    inset 0 1px 0 rgba(255,255,255,0.70),
+    /* Inner highlight — left edge refraction */
+    inset 1px 0 0 rgba(255,255,255,0.35) !important;
+
+  /* Living transition */
+  transition:
+    box-shadow 0.3s cubic-bezier(0.22,1,0.36,1),
+    transform 0.3s cubic-bezier(0.22,1,0.36,1),
+    border-color 0.3s ease !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Top refraction light bar */
+.card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 10% !important;
+  right: 10% !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.9) 30%,
+    rgba(255,255,255,0.95) 50%,
+    rgba(255,255,255,0.9) 70%,
+    transparent 100%
+  ) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+/* Hover: elevate + glow */
+.card:hover {
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.05),
+    0 12px 32px rgba(0,0,0,0.08),
+    0 32px 80px rgba(0,0,0,0.06),
+    0 0 40px rgba(10,132,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.80),
+    inset 1px 0 0 rgba(255,255,255,0.45) !important;
+  transform: translateY(-4px) !important;
+  border-color: rgba(255,255,255,0.75) !important;
+}
+
+/* Click: glass press */
+.card:active {
+  transform: scale(0.98) translateY(0) !important;
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.06),
+    0 4px 12px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.5) !important;
+  transition-duration: 0.1s !important;
+}
+
+.card-title {
+  font-weight: 620 !important;
+  font-size: clamp(0.95rem, 2vw, 1.1rem) !important;
+  letter-spacing: -0.02em !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+}
+
+.card-sub,
+.card-meta {
+  font-size: clamp(0.76rem, 1.6vw, 0.84rem) !important;
+  color: rgba(71,85,105,0.8) !important;
+}
+
+/* Card icon glow */
+.card-icon {
+  border-radius: 14px !important;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08),
+    0 0 0 0.5px rgba(0,0,0,0.04) !important;
+}
+
+
+/* ══════════════════════════════════════
+   🔬 ADMIN / SCORE CARDS — Deep Glass
+   ══════════════════════════════════════ */
+.admin-card,
+.score-card {
+  background: rgba(255, 255, 255, 0.48) !important;
+  backdrop-filter: blur(36px) saturate(170%) brightness(104%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(170%) brightness(104%) !important;
+  border-radius: 20px !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.06),
+    0 20px 56px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 1px 0 0 rgba(255,255,255,0.30) !important;
+  transition: all 0.28s cubic-bezier(0.22,1,0.36,1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.admin-card::before,
+.score-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 8% !important;
+  right: 8% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+.admin-card:hover,
+.score-card:hover {
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.05),
+    0 14px 36px rgba(0,0,0,0.08),
+    0 28px 72px rgba(0,0,0,0.05),
+    0 0 30px rgba(10,132,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.7) !important;
+  transform: translateY(-3px) !important;
+}
+
+
+/* ══════════════════════════════════════
+   📝 EXAM PAPER — Floating Document Glass
+   ══════════════════════════════════════ */
+.exam-paper {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(var(--ultra-blur-lg, 56px)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--ultra-blur-lg, 56px)) saturate(180%) !important;
+  border-radius: 24px !important;
+  border: 0.5px solid rgba(255,255,255,0.6) !important;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.05),
+    0 20px 60px rgba(0,0,0,0.08),
+    0 40px 100px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+/* Choice bubbles — mini glass chips */
+.choice-btn {
+  background: rgba(255,255,255,0.50) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 0.5px solid rgba(0,0,0,0.06) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--ultra-shadow-xs, 0 1px 2px rgba(0,0,0,0.04)), inset 0 1px 0 rgba(255,255,255,0.5) !important;
+  transition: all 0.16s ease !important;
+  min-height: 44px !important;
+}
+
+.choice-btn:hover {
+  background: rgba(10,132,255,0.08) !important;
+  border-color: rgba(10,132,255,0.3) !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.08), 0 2px 8px rgba(10,132,255,0.06) !important;
+}
+
+.choice-btn.selected {
+  background: linear-gradient(135deg, #0A84FF, #5AC8FA) !important;
+  border-color: rgba(0,100,200,0.3) !important;
+  color: white !important;
+  box-shadow: 0 4px 14px rgba(10,132,255,0.30), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+}
+
+.choice-btn.correct {
+  background: rgba(50,215,75,0.12) !important;
+  border-color: rgba(50,215,75,0.35) !important;
+  color: #1a7a32 !important;
+}
+
+.choice-btn.wrong {
+  background: rgba(255,55,95,0.10) !important;
+  border-color: rgba(255,55,95,0.30) !important;
+  color: #c0392b !important;
+}
+
+
+/* ══════════════════════════════════════
+   🧩 MODALS — Floating Sheet Glass
+   ══════════════════════════════════════ */
+.modal,
+.modal-content {
+  background: rgba(255,255,255,0.75) !important;
+  backdrop-filter: blur(60px) saturate(200%) brightness(108%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(108%) !important;
+  border-radius: 24px !important;
+  border: 0.5px solid rgba(255,255,255,0.65) !important;
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.08),
+    0 32px 80px rgba(0,0,0,0.12),
+    0 0 0 0.5px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.85) !important;
+}
+
+.modal-backdrop {
+  background: rgba(15, 23, 42, 0.28) !important;
+  backdrop-filter: blur(12px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(120%) !important;
+}
+
+
+/* ══════════════════════════════════════
+   🔬 GRID — Science Data Grid Background
+   Subtle lab-grid overlay on main area
+   ══════════════════════════════════════ */
+.main::after,
+.content::after {
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background-image:
+    linear-gradient(rgba(10,132,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,132,255,0.02) 1px, transparent 1px) !important;
+  background-size: 48px 48px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%) !important;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%) !important;
+}
+
+
+/* ══════════════════════════════════════
+   📱 MOBILE GLASS — Lighter for GPU
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .card,
+  .admin-card,
+  .score-card {
+    backdrop-filter: blur(24px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  }
+
+  .main::after,
+  .content::after {
+    display: none !important; /* Kill grid on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .card,
+  .admin-card,
+  .score-card {
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-radius: 16px !important;
+  }
+}
+
+
+/* ══════════════════════════════════════
+   ♿ REDUCED MOTION — Glass stays, motion dies
+   ══════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .admin-card:hover,
+  .score-card:hover {
+    transform: none !important;
+  }
+}

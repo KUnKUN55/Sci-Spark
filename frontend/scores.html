@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ประกาศคะแนน - SciSpace Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive-fix.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg">
+  <style>
+    /* Score Page Specific Styles — Dark Aurora */
+    .score-container {
+      max-width: 580px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .score-card {
+      background: #121626;
+      border-radius: 28px;
+      padding: 36px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top aurora line */
+    .score-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-aurora, linear-gradient(135deg, #06D6A0, #7B61FF, #FF6B9D));
+      background-size: 200% 100%;
+      animation: border-flow 5s linear infinite;
+    }
+
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes border-flow {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .score-card h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: var(--gradient-aurora);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .score-card p.sub {
+      color: var(--text-sub, #8B95AD);
+      font-size: 0.875rem;
+      margin: 0 0 28px;
+    }
+
+    .score-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .score-input-group input {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px 18px;
+      background: var(--bg-input, rgba(28,34,58,0.7));
+      border: 1.5px solid var(--border, rgba(255,255,255,0.06));
+      border-radius: 16px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-main, #E8ECF4);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      -webkit-appearance: none; appearance: none;
+    }
+
+    .score-input-group input:focus {
+      background: var(--bg-elevated, rgba(22,26,46,0.92));
+      border-color: var(--border-focus, rgba(123,97,255,0.5));
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(123,97,255,0.12);
+    }
+
+    .score-input-group input::placeholder {
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--text-muted, #5A6480);
+    }
+
+    .btn-lookup {
+      padding: 14px 28px;
+      background: var(--gradient-primary, linear-gradient(135deg, #06D6A0, #7B61FF));
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 6px 24px rgba(123,97,255,0.3);
+      font-family: inherit;
+      min-height: 44px;
+      transition: all 0.25s ease;
+      -webkit-appearance: none; appearance: none;
+    }
+
+    .btn-lookup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(123,97,255,0.4);
+    }
+
+    .btn-lookup:active { transform: scale(0.97); transition-duration: 0.08s; }
+
+    .btn-lookup:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Result Display */
+    .score-result {
+      margin-top: 28px;
+      animation: card-in 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .score-result.empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-sub, #8B95AD);
+    }
+
+    .score-result.empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .score-result.empty .empty-text { font-size: 1rem; font-weight: 600; }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+    }
+
+    .result-avatar {
+      width: 52px; height: 52px;
+      border-radius: 18px;
+      background: var(--gradient-primary, linear-gradient(135deg, #06D6A0, #7B61FF));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: white; font-weight: 800;
+      box-shadow: 0 6px 24px rgba(123,97,255,0.3);
+      flex-shrink: 0;
+    }
+
+    .result-id {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--text-main, #E8ECF4);
+    }
+
+    .result-label {
+      font-size: 0.72rem;
+      color: var(--text-sub, #8B95AD);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--divider, rgba(255,255,255,0.04));
+      gap: 8px;
+    }
+
+    .score-row:last-child { border-bottom: none; }
+
+    .score-row .label {
+      font-weight: 500;
+      color: var(--text-sub, #8B95AD);
+      font-size: 0.9rem;
+    }
+
+    .score-row .value {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text-main, #E8ECF4);
+      text-align: right;
+    }
+
+    .score-row.total-row {
+      margin-top: 8px;
+      padding-top: 18px;
+      border-top: 1.5px solid var(--border, rgba(255,255,255,0.06));
+      border-bottom: none;
+    }
+
+    .score-row.total-row .label {
+      font-size: 1rem;
+      color: var(--text-main, #E8ECF4);
+      font-weight: 700;
+    }
+
+    .score-row.total-row .value {
+      font-size: 1.4rem;
+      background: var(--gradient-aurora, linear-gradient(135deg, #06D6A0, #7B61FF, #FF6B9D));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-sub, #8B95AD); text-decoration: none;
+      font-weight: 600; font-size: 0.875rem; margin-bottom: 18px;
+      transition: color 0.2s ease;
+      min-height: 44px;
+      padding: 4px 0;
+    }
+    .back-link:hover { color: var(--aurora-1, #06D6A0); }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .bottom-nav { display: flex; }
+      .main { padding: 22px 18px; padding-bottom: 110px; }
+      .score-card { padding: 24px; border-radius: 22px; }
+      .score-input-group { flex-direction: column; }
+      .btn-lookup { width: 100%; text-align: center; }
+      .header { flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="https://img5.pic.in.th/file/secure-sv1/Polished-Sci-Spark-Logo-with-Subtle-Highlights.jpg" alt="Sci-Spark" style="width:40px;height:40px;border-radius:16px;"> Sci-Spark
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-label">Menu</div>
+      <div class="nav-item" onclick="location.href='index.html'">
+        <span>🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="location.href='index.html'">
+        <span>📂</span> Documents
+      </div>
+      <div class="nav-item" onclick="location.href='index.html'">
+        <span>📝</span> Exams
+      </div>
+      <div class="nav-item active">
+        <span>📊</span> Scores
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    
+    <!-- Header -->
+    <div class="header">
+      <h1 class="page-title">📊 ประกาศคะแนน</h1>
+    </div>
+
+    <div class="score-container">
+      <div class="score-card">
+        <h2>🔍 ตรวจสอบคะแนน</h2>
+        <p class="sub">กรอกรหัสนักเรียนเพื่อดูคะแนนของคุณ</p>
+
+        <div class="score-input-group">
+          <input type="text" id="student-id-input" placeholder="กรอกรหัสนักเรียน..." 
+                 onkeydown="if(event.key==='Enter') lookupScore()">
+          <button class="btn-lookup" id="btn-lookup" onclick="lookupScore()">ดูคะแนน</button>
+        </div>
+
+        <div id="score-result"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="b-nav-item" onclick="location.href='index.html'">
+      <span class="b-nav-icon">🏠</span> 
+      <span>Home</span>
+    </button>
+    <button class="b-nav-item" onclick="location.href='index.html'">
+      <span class="b-nav-icon">📂</span> 
+      <span>Docs</span>
+    </button>
+    <button class="b-nav-item" onclick="location.href='index.html'">
+      <span class="b-nav-icon">📝</span> 
+      <span>Exams</span>
+    </button>
+    <button class="b-nav-item active">
+      <span class="b-nav-icon">📊</span> 
+      <span>Scores</span>
+    </button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/cache-layer.js"></script>
+  <script src="js/request-queue.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // ========================================
+    // Score Lookup Logic
+    // ========================================
+
+    async function lookupScore() {
+      var input = document.getElementById('student-id-input');
+      var resultDiv = document.getElementById('score-result');
+      var btn = document.getElementById('btn-lookup');
+      var studentId = input.value.trim();
+
+      if (!studentId) {
+        input.focus();
+        input.style.borderColor = '#FF6B9D';
+        setTimeout(function() { input.style.borderColor = ''; }, 1500);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ กำลังค้นหา...';
+      resultDiv.innerHTML = '';
+
+      try {
+        const data = await apiGet('getStudentScore', { studentId: studentId });
+
+        if (!data.found) {
+          resultDiv.innerHTML =
+            '<div class="score-result empty">' +
+              '<div class="empty-icon">📭</div>' +
+              '<div class="empty-text">ยังไม่มีการประกาศคะแนน</div>' +
+            '</div>';
+        } else {
+          var s = data.data;
+          var safeId = escapeHtml(s.studentId);
+          var initial = safeId.charAt(0).toUpperCase();
+
+          var rowsHTML = '';
+          if (s.mode === 'breakdown' && s.items && s.items.length > 0) {
+            s.items.forEach(function(item) {
+              rowsHTML += '<div class="score-row"><span class="label">' + escapeHtml(item.label) + '</span><span class="value">' + escapeHtml(String(item.score)) + '</span></div>';
+            });
+            rowsHTML += '<div class="score-row total-row"><span class="label">รวมทั้งหมด</span><span class="value">' + escapeHtml(String(s.total)) + '</span></div>';
+          } else {
+            rowsHTML = '<div class="score-row total-row" style="border-top:none; margin-top:0; padding-top:0;">' +
+              '<span class="label">คะแนนรวม</span>' +
+              '<span class="value">' + escapeHtml(String(s.total)) + '</span>' +
+            '</div>';
+          }
+
+          resultDiv.innerHTML =
+            '<div class="score-result">' +
+              '<div class="result-header">' +
+                '<div class="result-avatar">' + initial + '</div>' +
+                '<div>' +
+                  '<div class="result-id">' + safeId + '</div>' +
+                  '<div class="result-label">รหัสนักเรียน</div>' +
+                '</div>' +
+              '</div>' +
+              rowsHTML +
+            '</div>';
+        }
+
+      } catch (error) {
+        resultDiv.innerHTML =
+          '<div class="score-result empty">' +
+            '<div class="empty-icon">⚠️</div>' +
+            '<div class="empty-text">เกิดข้อผิดพลาด: ' + escapeHtml(error.message) + '</div>' +
+          '</div>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'ดูคะแนน';
+      }
+    }
+  </script>
+  <script src="js/ambient.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('[SW] Registered:', reg.scope); })
+          .catch(function(err) { console.warn('[SW] Registration failed:', err); });
+      });
+    }
+  </script>
+</body>
+</html>

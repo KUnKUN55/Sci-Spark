@@ -1,0 +1,323 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   🎞️ ANIMATIONS.CSS — World-Class Apple-Level Motion
+   ═══════════════════════════════════════════════════════════════════════
+   Only opacity, transform, filter, backdrop-filter — NEVER layout props
+   ✅ Zero logic. Removable: delete + unlink.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════
+   🎬 KEYFRAMES — Living Motion
+   ══════════════════════════════ */
+
+/* Page entrance — cinematic fade up */
+@keyframes ultra-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Card reveal — glass materialize */
+@keyframes ultra-card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Spring pop — modal / dialog */
+@keyframes ultra-spring {
+  0%   { opacity: 0; transform: scale(0.85) translateY(12px); filter: blur(6px); }
+  50%  { opacity: 1; filter: blur(0); }
+  70%  { transform: scale(1.015) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Fade in (generic) */
+@keyframes ultra-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slide from left */
+@keyframes ultra-slide-right {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Subtle float up-down (decorative) */
+@keyframes ultra-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* Shimmer skeleton */
+@keyframes ultra-shimmer {
+  0%   { background-position: -250% 0; }
+  100% { background-position: 250% 0; }
+}
+
+/* Glow pulse (accent elements) */
+@keyframes ultra-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(10,132,255,0.10); }
+  50%      { box-shadow: 0 0 40px rgba(10,132,255,0.18), 0 0 80px rgba(10,132,255,0.06); }
+}
+
+/* Waveform line animation */
+@keyframes ultra-wave {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Gradient background drift */
+@keyframes ultra-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Particle float */
+@keyframes ultra-particle-rise {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.3); }
+  20%  { opacity: 0.6; }
+  80%  { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+}
+
+/* Spinner */
+@keyframes ultra-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ══════════════════════════════
+   🌊 PAGE ENTRANCE — Cinematic
+   ══════════════════════════════ */
+.main,
+.content {
+  animation: ultra-page-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+.page-header {
+  animation: ultra-page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both !important;
+}
+
+
+/* ══════════════════════════════
+   🃏 CARD STAGGER — Glass Materialize
+   ══════════════════════════════ */
+.card {
+  animation: ultra-card-reveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+.card:nth-child(1)  { animation-delay: 0.00s !important; }
+.card:nth-child(2)  { animation-delay: 0.05s !important; }
+.card:nth-child(3)  { animation-delay: 0.10s !important; }
+.card:nth-child(4)  { animation-delay: 0.15s !important; }
+.card:nth-child(5)  { animation-delay: 0.20s !important; }
+.card:nth-child(6)  { animation-delay: 0.24s !important; }
+.card:nth-child(7)  { animation-delay: 0.27s !important; }
+.card:nth-child(8)  { animation-delay: 0.30s !important; }
+.card:nth-child(n+9){ animation-delay: 0.32s !important; }
+
+/* Admin/Score cards */
+.admin-card {
+  animation: ultra-card-reveal 0.45s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+.admin-card:nth-child(1) { animation-delay: 0.02s !important; }
+.admin-card:nth-child(2) { animation-delay: 0.08s !important; }
+.admin-card:nth-child(3) { animation-delay: 0.14s !important; }
+.admin-card:nth-child(4) { animation-delay: 0.20s !important; }
+
+/* Score page */
+.score-card {
+  animation: ultra-spring 0.5s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+/* Stats */
+.stat-card {
+  animation: ultra-card-reveal 0.4s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+.stat-card:nth-child(1) { animation-delay: 0.06s !important; }
+.stat-card:nth-child(2) { animation-delay: 0.12s !important; }
+.stat-card:nth-child(3) { animation-delay: 0.18s !important; }
+.stat-card:nth-child(4) { animation-delay: 0.24s !important; }
+
+
+/* ══════════════════════════════
+   🪟 MODAL — Spring Sheet
+   ══════════════════════════════ */
+.modal,
+.modal-content,
+.login-box {
+  animation: ultra-spring 0.5s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.modal-backdrop,
+.login-overlay {
+  animation: ultra-fade-in 0.3s ease both !important;
+}
+
+
+/* ══════════════════════════════
+   📐 NAV — Slide Right
+   ══════════════════════════════ */
+.nav-item {
+  animation: ultra-slide-right 0.3s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+.nav-item:nth-child(1) { animation-delay: 0.03s !important; }
+.nav-item:nth-child(2) { animation-delay: 0.06s !important; }
+.nav-item:nth-child(3) { animation-delay: 0.09s !important; }
+.nav-item:nth-child(4) { animation-delay: 0.12s !important; }
+.nav-item:nth-child(5) { animation-delay: 0.15s !important; }
+.nav-item:nth-child(n+6) { animation-delay: 0.18s !important; }
+
+
+/* ══════════════════════════════
+   🖱 HOVER / ACTIVE — Haptic Feel
+   ══════════════════════════════ */
+
+/* Card hover — smooth lift */
+.card,
+.admin-card,
+.score-card {
+  transition:
+    box-shadow 0.28s cubic-bezier(0.22,1,0.36,1),
+    transform  0.28s cubic-bezier(0.22,1,0.36,1),
+    border-color 0.28s ease !important;
+}
+
+/* Click — "haptic" scale down (all interactive) */
+.primary-btn:active,
+.secondary-btn:active,
+.action-btn:active,
+.cat-tab:active,
+.type-tab:active,
+.choice-btn:active,
+.b-nav-item:active,
+.nav-item:active {
+  transform: scale(0.96) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Nav + button smoothness */
+.nav-item {
+  transition: all 0.18s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+.primary-btn,
+.secondary-btn,
+.action-btn {
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+.choice-btn {
+  transition: all 0.16s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+.b-nav-item {
+  transition: all 0.14s ease !important;
+}
+
+
+/* ══════════════════════════════
+   ⭐ FOCUS RING — Blue Glow
+   ══════════════════════════════ */
+:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.28) !important;
+  border-radius: 8px !important;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.03),
+    0 0 0 3px rgba(10,132,255,0.18),
+    0 0 16px rgba(10,132,255,0.06) !important;
+}
+
+
+/* ══════════════════════════════
+   💀 SKELETON / SHIMMER
+   ══════════════════════════════ */
+.skeleton,
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.04) 25%,
+    rgba(0,0,0,0.08) 50%,
+    rgba(0,0,0,0.04) 75%
+  ) !important;
+  background-size: 250% 100% !important;
+  animation: ultra-shimmer 1.6s ease-in-out infinite !important;
+  border-radius: 8px !important;
+  color: transparent !important;
+  pointer-events: none !important;
+}
+
+
+/* ══════════════════════════════
+   🔄 SPINNER
+   ══════════════════════════════ */
+.loading-spinner,
+.spinner {
+  border: 2.5px solid rgba(0,0,0,0.06) !important;
+  border-top-color: #0A84FF !important;
+  border-radius: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+  animation: ultra-spin 0.65s linear infinite !important;
+}
+
+
+/* ══════════════════════════════
+   📱 MOBILE — Faster, Simpler
+   ══════════════════════════════ */
+@media (max-width: 600px) {
+  .card,
+  .admin-card,
+  .score-card,
+  .stat-card {
+    animation-duration: 0.3s !important;
+    animation-delay: 0s !important; /* No stagger on mobile */
+  }
+
+  .card:hover,
+  .admin-card:hover,
+  .score-card:hover {
+    transform: none !important; /* No hover on touch */
+  }
+
+  .main,
+  .content {
+    animation-duration: 0.35s !important;
+  }
+}
+
+
+/* ══════════════════════════════
+   ♿ REDUCED MOTION — Complete Kill
+   ══════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.08ms !important;
+    animation-delay: 0s !important;
+  }
+}

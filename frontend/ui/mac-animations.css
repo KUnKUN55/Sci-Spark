@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════════════════
+   🎞️ MAC-ANIMATIONS.CSS — Apple Motion System
+   ═══════════════════════════════════════════════════════════════════
+   Rule: ONLY use opacity, transform, filter, backdrop-filter
+   ❌ No layout-triggering properties (width, height, top, margin)
+   ✅ Removable: delete file + <link> tag
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════
+   🎬 KEYFRAMES — Apple easing
+   Spring = fast out, slow settle
+   ══════════════════════════════ */
+
+/* Page / section entrance */
+@keyframes mac-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mac-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* macOS sheet slide up from bottom */
+@keyframes mac-sheet-up {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* macOS popover / alert spring */
+@keyframes mac-spring-in {
+  0%   { opacity: 0; transform: scale(0.88) translateY(8px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(-1px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* macOS sidebar reveal */
+@keyframes mac-slide-right {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Subtle shimmer for skeleton loading */
+@keyframes mac-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Pulse (active / loading indicator) */
+@keyframes mac-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* Success check flash */
+@keyframes mac-success-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+  50%  { box-shadow: 0 0 0 6px rgba(52,199,89,0.18); }
+  100% { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+}
+
+
+/* ══════════════════════════════
+   🗂 PAGE ENTRANCE
+   Cards stagger as page loads
+   ══════════════════════════════ */
+
+/* Grid reveals smoothly */
+.grid,
+.dashboard-grid {
+  animation: mac-fade-in 0.3s ease-out both;
+}
+
+/* Each card staggers */
+.card {
+  animation: mac-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card:nth-child(1) { animation-delay: 0.00s; }
+.card:nth-child(2) { animation-delay: 0.04s; }
+.card:nth-child(3) { animation-delay: 0.08s; }
+.card:nth-child(4) { animation-delay: 0.12s; }
+.card:nth-child(5) { animation-delay: 0.16s; }
+.card:nth-child(6) { animation-delay: 0.20s; }
+.card:nth-child(n+7) { animation-delay: 0.22s; }
+
+/* Admin/score cards */
+.admin-card {
+  animation: mac-fade-up 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.admin-card:nth-child(1) { animation-delay: 0.00s; }
+.admin-card:nth-child(2) { animation-delay: 0.06s; }
+.admin-card:nth-child(3) { animation-delay: 0.12s; }
+
+/* Page title entrance */
+.page-header {
+  animation: mac-fade-up 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0s both;
+}
+
+/* Stat cards stagger */
+.stat-card {
+  animation: mac-fade-up 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.10s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.20s; }
+
+/* Nav items slide in from left */
+.nav-item {
+  animation: mac-fade-up 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.nav-item:nth-child(1) { animation-delay: 0.05s; }
+.nav-item:nth-child(2) { animation-delay: 0.08s; }
+.nav-item:nth-child(3) { animation-delay: 0.11s; }
+.nav-item:nth-child(4) { animation-delay: 0.14s; }
+.nav-item:nth-child(n+5) { animation-delay: 0.17s; }
+
+
+/* ══════════════════════════════
+   🖱 HOVER / ACTIVE STATES
+   macOS: cards lift, buttons scale
+   ══════════════════════════════ */
+
+/* Card hover lift — smooth, not bouncy */
+.card {
+  transition:
+    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    transform  0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Click feedback — quick scale down */
+.card:active,
+.primary-btn:active,
+.secondary-btn:active,
+.cat-tab:active,
+.type-tab:active,
+.choice-btn:active,
+.b-nav-item:active,
+.nav-item:active {
+  transform: scale(0.97) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Nav item — no lift, just bg */
+.nav-item {
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease !important;
+}
+
+/* Bottom nav item tap */
+.b-nav-item {
+  transition: color 0.12s ease, opacity 0.12s ease !important;
+}
+
+.b-nav-item:active { opacity: 0.6 !important; }
+
+/* Button hover — macOS no lift, just color */
+.primary-btn {
+  transition:
+    background-color 0.14s ease,
+    box-shadow 0.14s ease,
+    transform 0.10s ease !important;
+}
+
+/* Choice button micro-interaction */
+.choice-btn {
+  transition:
+    background-color 0.14s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease,
+    transform 0.10s ease !important;
+}
+
+
+/* ══════════════════════════════
+   🪟 MODAL / DIALOG — spring motion
+   ══════════════════════════════ */
+
+/* Sheet modal entrance (iOS-like) */
+.modal {
+  animation: mac-sheet-up 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Alert / confirm popup (macOS spring) */
+.modal-content,
+.login-box {
+  animation: mac-spring-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Backdrop fades in */
+.modal-backdrop,
+.login-overlay {
+  animation: mac-fade-in 0.25s ease both;
+}
+
+
+/* ══════════════════════════════
+   ✨ SCORE CARD ENTRANCE
+   ══════════════════════════════ */
+.score-card {
+  animation: mac-spring-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.score-result {
+  animation: mac-fade-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+
+/* ══════════════════════════════
+   💀 SKELETON LOADING
+   macOS shimmer style
+   ══════════════════════════════ */
+.skeleton,
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.05) 25%,
+    rgba(0,0,0,0.10) 50%,
+    rgba(0,0,0,0.05) 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: mac-shimmer 1.4s ease-in-out infinite !important;
+  border-radius: 6px !important;
+  color: transparent !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+
+/* ══════════════════════════════
+   🔄 PAGE TRANSITION
+   Sections fade between tabs
+   ══════════════════════════════ */
+.page-content {
+  animation: mac-fade-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Score input group spring in */
+.score-card .score-input-group {
+  animation: mac-fade-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+
+/* ══════════════════════════════
+   📋 TABLE ROW HOVER
+   Subtle, non-layout-shifting
+   ══════════════════════════════ */
+tr {
+  transition: background-color 0.12s ease;
+}
+
+
+/* ══════════════════════════════
+   🌊 FOCUS RING — macOS blue glow
+   ══════════════════════════════ */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.35) !important;
+  border-radius: 6px;
+  transition: box-shadow 0.14s ease;
+}
+
+/* Inputs have their own focus style */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.04),
+    0 0 0 3px rgba(0, 122, 255, 0.28) !important;
+}
+
+
+/* ══════════════════════════════
+   🏆 SUCCESS FEEDBACK
+   ══════════════════════════════ */
+.success-flash {
+  animation: mac-success-flash 0.6s ease both;
+}
+
+
+/* ══════════════════════════════
+   🔄 LOADING SPINNER — macOS style
+   ══════════════════════════════ */
+@keyframes mac-spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner,
+.spinner {
+  border-radius: 50% !important;
+  border: 2px solid rgba(0,0,0,0.08) !important;
+  border-top-color: #007AFF !important;
+  animation: mac-spin 0.7s linear infinite !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+
+/* ══════════════════════════════
+   ♿ PREFERS-REDUCED-MOTION
+   Full override — respect the OS
+   ══════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.10ms !important;
+  }
+}
+
+
+/* ══════════════════════════════
+   📱 MOBILE — lighter animations
+   Reduce GPU load on phones
+   ══════════════════════════════ */
+@media (max-width: 600px) {
+  .card {
+    animation-duration: 0.28s !important;
+    animation-delay: 0s !important; /* no stagger on mobile */
+  }
+
+  .card:hover { transform: none !important; } /* no hover on touch */
+
+  .admin-card {
+    animation-duration: 0.28s !important;
+    animation-delay: 0s !important;
+  }
+
+  /* Faster, simpler transitions on touch devices */
+  .primary-btn,
+  .choice-btn,
+  .cat-tab,
+  .type-tab {
+    transition-duration: 0.10s !important;
+  }
+}
